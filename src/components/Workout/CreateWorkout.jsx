@@ -30,7 +30,13 @@ function CreateWorkout(props) {
                         </Form.Group>
                         <Form.Group>
                             <Form.Label>Exercises included</Form.Label>
-                            <Form.Control type="sets" placeholder="Exercises included" />
+                            <Form.Control as="select" multiple>
+                                <option>1</option>
+                                <option>2</option>
+                                <option>3</option>
+                                <option>4</option>
+                                <option>5</option>
+                            </Form.Control>
                         </Form.Group>
                         <Button type="submit" onClick={onSubmitClicked}>Submit</Button>
                     </Form>

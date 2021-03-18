@@ -17,7 +17,7 @@ function WorkoutPage() {
     return (
 
         <Container class="bd-content ps-lg-4">
-            <h1>WorkotPage</h1>
+            <h1>WorkoutPage</h1>
             <div class="nav justify-content-center">
                 <Form inline >
                     <FormControl type="text" placeholder="Search" className="mr-sm-2" />

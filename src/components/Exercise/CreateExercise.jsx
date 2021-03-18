@@ -22,7 +22,7 @@ function CreateExercise(props) {
                         </Form.Group>
                         <Form.Group>
                             <Form.Label>Description</Form.Label>
-                            <Form.Control type="Description" placeholder="Description" />
+                            <Form.Control as="textarea" rows={3} type="Description" placeholder="Description" />
                         </Form.Group>
                         <Form.Group>
                             <Form.Label>Target muscel group</Form.Label>
