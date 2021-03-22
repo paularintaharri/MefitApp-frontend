@@ -10,11 +10,9 @@ function ProfilePage() {
 
     return (
         <div>
-
+            <ApplicationFrame />
+            <br />
             <ProfileForm />
-            <br />
-            <br />
-
         </div>
     );
 

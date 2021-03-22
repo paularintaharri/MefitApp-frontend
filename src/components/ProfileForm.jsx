@@ -35,6 +35,7 @@ function ProfileForm() {
     });
 
     function processData(params) {
+        params.preventDefault()
         console.log("lähettäää");
         if (id) {
             postProfileData(params);
