@@ -1,3 +1,29 @@
 input {
     display: block;
 }
+
+#name{
+
+    position: absolute;
+    
+}
+
+#form {
+
+    position: relative;
+    width:400px;
+    padding:20px;   
+    margin: auto;   
+    border: 3px solid rgb(94, 97, 136);
+    padding: 10px;
+    border-radius: 25px;
+    }
+
+
+Label {
+    position: relative;
+    top: 0px;
+    align-content: left;   
+    }
+
+

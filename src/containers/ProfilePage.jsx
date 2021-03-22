@@ -1,4 +1,6 @@
 import ProfileForm from '../components/ProfileForm';
+import ApplicationFrame from '../components/ApplicationFrame';
+
 
 
 
@@ -7,7 +9,13 @@ function ProfilePage() {
 
 
     return (
-        <ProfileForm />
+        <div>
+
+            <ProfileForm />
+            <br />
+            <br />
+
+        </div>
     );
 
 }
