@@ -16,9 +16,9 @@ function WorkoutPage() {
 
     return (
 
-        <Container class="bd-content ps-lg-4">
-            <h1>WorkoutPage</h1>
-            <div class="nav justify-content-center">
+        <Container className="bd-content ps-lg-4">
+            <h1>Workouts</h1>
+            <div className="nav justify-content-center">
                 <Form inline >
                     <FormControl type="text" placeholder="Search" className="mr-sm-2" />
                     <Button variant="outline-primary" onClick={() => sortByType()}>Sort by Workout Type</Button>
@@ -26,9 +26,8 @@ function WorkoutPage() {
             </div>
             <WorkoutList />
 
-            <UpdateWorkout />
-            <ButtonGroup className="mb-2 mr-2" aria-label="Update Exercise">
-                <Button type="button" class="btn btn-primary" variant="primary" onClick={() => setModalWorkoutCreate(true)}>Create New Exercise</Button>
+            <ButtonGroup className="mb-2 mr-2" aria-label="Update Workout">
+                <Button type="button" className="btn btn-primary" variant="primary" onClick={() => setModalWorkoutCreate(true)}>Create New Workout</Button>
                 <CreateWorkout show={modalWorkoutCreate} onHide={() => setModalWorkoutCreate(false)} />
             </ButtonGroup>
 

@@ -1,10 +1,10 @@
 import { Button, Card, Row, Col, ButtonGroup, Accordion } from "react-bootstrap";
-import WorkoutDetail from "./WorkoutDetail";
+import ProgramDetail from "./ProgramDetail";
 
-function WorkoutCard() {
+function ProgramCard() {
 
-    const type = "Cardio";
-    const name = "15 min Beginner Cardio";
+    const name = "Summer 2021";
+    const category = "firm up";
 
     return (
 
@@ -13,10 +13,10 @@ function WorkoutCard() {
                 <Accordion.Toggle as={Card.Header} eventKey="1">
                     <Row>
                         <Col>
-                            <p>Workout: {name}</p>
+                            <p>Program: {name}</p>
                         </Col>
                         <Col>
-                            <p>Type: {type}</p>
+                            <p>{category}</p>
                         </Col>
                         <Col>
                             <ButtonGroup className="mb-2 mr-2" aria-label="Show details">
@@ -26,11 +26,11 @@ function WorkoutCard() {
                     </Row>
                 </Accordion.Toggle>
                 <Accordion.Collapse eventKey="1">
-                    <WorkoutDetail />
+                    <ProgramDetail />
                 </Accordion.Collapse>
             </Card>
         </Accordion>
     );
 };
 
-export default WorkoutCard;
+export default ProgramCard;
