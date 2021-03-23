@@ -2,26 +2,25 @@ import { Button, Card, Row, Col, ButtonGroup } from "react-bootstrap";
 import { useState } from "react";
 import ExerciseDetail from "./ExerciseDetail";
 
-function ExerciseCard(props) {
+function ExerciseCard({exercise}, props) {
     const [modalExerciseDetail, setModalExerciseDetail] = useState(false);
-
-    const muscelGroup = "Triceps";
-    const name = "Pull Ups";
+    const [currentexercise, setCurrentExercise] = useState(exercise);
 
     return (
         <Card>
-            <Card.Body>
+            <Card.Body className="exercise-card-body">
             <Row>
                 <Col>
-                    <p>{name}</p>
+                    <p>Exercise: {exercise.name}</p>
                 </Col>
                 <Col>
-                    <p>Muscel group: {muscelGroup}</p>
+                    <p>Muscle group: {exercise.target_muscle_group}</p>
                 </Col>
                 <Col>
                     <ButtonGroup className="mb-2 mr-2" aria-label="Show details">
                         <Button type="button" onClick={() => setModalExerciseDetail(true)}>Show details</Button>
-                        <ExerciseDetail show={modalExerciseDetail} onHide={() => setModalExerciseDetail(false)}/>
+                        <ExerciseDetail show={modalExerciseDetail} onHide={() => setModalExerciseDetail(false)}
+                        currentexercise={currentexercise}/>
                     </ButtonGroup>
                 </Col>
             </Row>
