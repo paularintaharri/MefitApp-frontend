@@ -23,3 +23,17 @@ export const createExercises = (form) => {
             console.log(error);
         })
 }
+
+export const updateExercises = (form) => {
+    return axios.patch(apiUrl + "/" + form.id, form)
+        .then((results) => {
+            if (results.status === 204) {
+                console.log("Exercise has been succesfully updated")
+            } else {
+                console.log("Something went wrong, try again");
+            }
+        })
+        .catch((error) => {
+            console.log(error);
+        })
+}

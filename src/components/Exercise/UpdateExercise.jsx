@@ -1,11 +1,15 @@
-import { Modal, Card, Button, Form } from "react-bootstrap";
-import { useState } from 'react'
-import { createExercises } from '../../utils/exerciseAPI'
+import { Modal, Card, Button, Form, Row, Col } from "react-bootstrap";
+import { useState, useEffect } from 'react'
+import { updateExercises } from '../../utils/exerciseAPI'
 
 function UpdateExercise(props) {
-
+    const exercise = props.selectedexercise;
     const [errors, setErrors] = useState({})
     const [form, setForm] = useState({})
+
+    useEffect(() => {
+        setForm(exercise);
+    }, [exercise]);
 
     const setField = (field, value) => {
         setForm({
@@ -19,7 +23,7 @@ function UpdateExercise(props) {
     }
 
     const findFormErrors = () => {
-        const { name, description, target_muscle_group, vid_link } = form
+        const { id, name, description, target_muscle_group, vid_link } = form
         const newErrors = {}
         if (!name || name === '') {
             newErrors.name = 'cannot be blank!'
@@ -39,8 +43,7 @@ function UpdateExercise(props) {
             setErrors(newErrors)
         } else {
             try {
-                console.log(form)
-                await createExercises(form);
+                await updateExercises(form);
             } catch (error) {
                 console.error(error.message);
             }
@@ -49,23 +52,32 @@ function UpdateExercise(props) {
         }
     };
 
-
     return (
-         <Modal {...props} size="lg" aria-labelledby="contained-modal-title-vcenter" centered>
+        <Modal {...props} size="lg" aria-labelledby="contained-modal-title-vcenter" centered>
             <Modal.Header>
                 <Modal.Title id="contained-modal-title-vcenter">
-                    <h3>Updaxte New Exercises</h3>
+                    <h3>Updaxte Exercises</h3>
                 </Modal.Title>
             </Modal.Header>
             <Modal.Body>
                 <Card.Body>
                     <Form onSubmit={onSubmitClicked}>
+                        <Form.Group as={Row}>
+                            <Form.Label column sm="2"> Id: </Form.Label>
+                            <Col sm="10">
+                                <Form.Control
+                                    plaintext
+                                    readOnly
+                                    defaultValue={exercise.id}
+                                    onChange={e => setField('id', e.target.value)} />
+                            </Col>
+                        </Form.Group>
                         <Form.Group>
                             <Form.Label>Exercise Name</Form.Label>
                             <Form.Control
                                 type="text"
                                 name="name"
-                                placeholder="Exercis Name"
+                                defaultValue={exercise.name}
                                 onChange={e => setField('name', e.target.value)}
                                 isInvalid={!!errors.name} />
                             <Form.Control.Feedback type='invalid'>
@@ -77,13 +89,13 @@ function UpdateExercise(props) {
                             <Form.Control as="textarea"
                                 rows={3}
                                 type="text"
-                                placeholder="Description"
+                                defaultValue={exercise.description}
                                 onChange={e => setField('description', e.target.value)} />
                         </Form.Group>
                         <Form.Group>
                             <Form.Label>Target muscle group</Form.Label>
                             <Form.Control type="text"
-                                placeholder="Target muscel group"
+                                defaultValue={exercise.target_muscle_group}
                                 onChange={e => setField('target_muscle_group', e.target.value)}
                                 isInvalid={!!errors.target_muscle_group} />
                             <Form.Control.Feedback type='invalid'>
@@ -93,7 +105,7 @@ function UpdateExercise(props) {
                         <Form.Group>
                             <Form.Label>Link to video</Form.Label>
                             <Form.Control type="text"
-                                placeholder="Video link"
+                                defaultValue={exercise.vid_link}
                                 onChange={e => setField('vid_link', e.target.value)} />
                         </Form.Group>
                         <Button type="submit">Submit</Button>

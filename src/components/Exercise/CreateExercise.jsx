@@ -39,7 +39,6 @@ function CreateExercise(props) {
             setErrors(newErrors)
         } else {
             try {
-                console.log(form)
                 await createExercises(form);
             } catch (error) {
                 console.error(error.message);
