@@ -11,6 +11,7 @@ function ExercisePage() {
     const [modalExerciseUpdate, setModalExerciseUpdate] = useState(false);
     const [exercises, setExercises] = useState([]);
     const [selectedexercise, setSelectedExercise] = useState();
+    const [isLoading, setIsLoading] = useState(true);
 
     function sortByTargetMuscleGroup() {
     }
@@ -20,16 +21,20 @@ function ExercisePage() {
     }
 
     useEffect(() => {
-        async function fetchData() {
-            try {
-                const item = await getAllExercises();
-                setExercises(item);
-            } catch (error) {
-                console.error(error.message);
-            }
+        fetchData().then(exercises => {
+            setExercises(exercises);
+            setIsLoading(false);
+        })
+    }, [exercises]);
+
+    async function fetchData() {
+        try {
+            const item = await getAllExercises();
+            return item;
+        } catch (error) {
+            console.error(error.message);
         }
-        fetchData();
-    }, []);
+    }
 
     useEffect(() => {
         if (exercises) {
@@ -43,26 +48,31 @@ function ExercisePage() {
 
     return (
         <Container className="bd-content ps-lg-4">
-            <h1>Exercises</h1>
-            <div className="nav justify-content-center">
-                <Form inline >
-                    <FormControl type="text" placeholder="Search" className="mr-sm-2" />
-                    <Button variant="outline-primary" onClick={() => sortByTargetMuscleGroup()}>Sort by target muscle group</Button>
-                </Form>
-            </div>
-            <ExerciseList />
-            <ButtonGroup className="mb-2 mr-2" aria-label="Update Exercise">
-                <Button
-                    type="button"
-                    className="btn btn-primary"
-                    variant="primary"
-                    onClick={() => setModalExerciseCreate(true)}>
-                    Create New Exercise
-                    </Button>
-                <CreateExercise
-                    show={modalExerciseCreate}
-                    onHide={() => setModalExerciseCreate(false)} />
-            </ButtonGroup>
+            {isLoading && <p>loading</p>}
+            {exercises.length !== 0 && (
+                <div>
+                    <h1>Exercises</h1>
+                    <div className="nav justify-content-center">
+                        <Form inline >
+                            <FormControl type="text" placeholder="Search" className="mr-sm-2" />
+                            <Button variant="outline-primary" onClick={() => sortByTargetMuscleGroup()}>Sort by target muscle group</Button>
+                        </Form>
+                    </div>
+                    <ExerciseList exercises={exercises}/>
+                    <ButtonGroup className="mb-2 mr-2" aria-label="Update Exercise">
+                        <Button
+                            type="button"
+                            className="btn btn-primary"
+                            variant="primary"
+                            onClick={() => setModalExerciseCreate(true)}>
+                            Create New Exercise
+                            </Button>
+                        <CreateExercise
+                            show={modalExerciseCreate}
+                            onHide={() => setModalExerciseCreate(false)} />
+                    </ButtonGroup>
+                </div>
+            )}          
             { selectedexercise != null &&
                 <div className="nav justify-content-center">
                     <Form.Row className="align-items-center">
