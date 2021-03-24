@@ -1,5 +1,5 @@
 import './App.css';
-import { BrowserRouter as Router, Switch, Route} from 'react-router-dom';
+import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import Container from 'react-bootstrap/Container';
 import LoginPage from './containers/LoginPage';
 import NotFound from './containers/NotFound';
@@ -14,7 +14,7 @@ function App() {
     <Router>
       <Container className="App">
         <main>
-          <Switch>
+          <Switch>     
             <Route exact path="/" component={ LoginPage } />
             <Route exact path="/profile" component={ ProfilePage } />
             <Route exact path="/exercises" component={ ExercisePage } />
