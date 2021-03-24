@@ -25,7 +25,7 @@ function ExercisePage() {
             setExercises(exercises);
             setIsLoading(false);
         })
-    }, []);
+    }, [exercises]);
 
     async function fetchData() {
         try {
@@ -49,7 +49,7 @@ function ExercisePage() {
     return (
         <Container className="bd-content ps-lg-4">
             {isLoading && <p>loading</p>}
-            {exercises.length > 0 && (
+            {exercises.length !== 0 && (
                 <div>
                     <h1>Exercises</h1>
                     <div className="nav justify-content-center">

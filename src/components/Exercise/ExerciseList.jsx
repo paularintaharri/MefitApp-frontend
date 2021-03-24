@@ -10,7 +10,7 @@ function ExerciseList(props) {
             setExercises(exercises);
             setIsLoading(false);
         })
-    }, []);
+    }, [exercises]);
 
     async function geData() {
         try {
@@ -25,7 +25,7 @@ function ExerciseList(props) {
         <div>
             <ul>
                 {isLoading && <p>loading</p>}
-                {exercises.length > 0 && exercises.map((exercise, index) => <ExerciseCard key={index} exercise={exercise} />)}
+                {exercises.length !== 0 && exercises.map((exercise, index) => <ExerciseCard key={index} exercise={exercise} />)}
             </ul>
         </div>
     );
