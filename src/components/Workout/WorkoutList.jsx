@@ -4,7 +4,6 @@ function WorkoutList() {
 
     return (
         <div>
-            <h3>All Available Workouts</h3>
             <ul>
                 <li>
                     <WorkoutCard/>

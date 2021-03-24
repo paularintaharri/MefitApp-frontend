@@ -6,6 +6,7 @@ import NotFound from './containers/NotFound';
 import ProfilePage from './containers/ProfilePage';
 import ExercisePage from './containers/ExercisePage';
 import WorkoutPage from './containers/WorkoutPage';
+import ProgramPage from './containers/ProgramPage';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 function App() {
@@ -13,14 +14,13 @@ function App() {
     <Router>
       <Container className="App">
         <main>
-          <Switch>
-
-            <Route exact path="/" component={LoginPage} />
-            <Route exact path="/profile" component={ProfilePage} />
-            <Route exact path="/viewexercises" component={ExercisePage} />
-            <Route exact path="/viewworkouts" component={WorkoutPage} />
-            <Route exact path="/*" component={NotFound} />
-
+          <Switch>     
+            <Route exact path="/" component={ LoginPage } />
+            <Route exact path="/profile" component={ ProfilePage } />
+            <Route exact path="/exercises" component={ ExercisePage } />
+            <Route exact path="/workouts" component={ WorkoutPage } />
+            <Route exact path="/programs" component={ ProgramPage } />
+            <Route exact path="/*" component={ NotFound } />
           </Switch>
         </main>
       </Container>
