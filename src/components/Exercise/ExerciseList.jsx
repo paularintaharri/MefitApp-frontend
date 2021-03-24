@@ -6,21 +6,26 @@ function ExerciseList(props) {
     const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
-        async function geData() {
-            try {
-                const item = await props.exercises;
-                setExercises(item);
-                setIsLoading(false);
-            } catch (error) {
-                console.error(error.message);
-            }
-        }
-        geData()
+        geData().then(exercises => {
+            setExercises(exercises);
+            setIsLoading(false);
+        })
     }, []);
+
+    async function geData() {
+        try {
+            const item = await props.exercises;
+            return item;
+        } catch (error) {
+            console.error(error.message);
+        }
+    }
+
     return (
         <div>
             <ul>
-                {!isLoading && exercises.map((exercise, index) => <ExerciseCard key={index} exercise={exercise} />)}
+                {isLoading && <p>loading</p>}
+                {exercises.length > 0 && exercises.map((exercise, index) => <ExerciseCard key={index} exercise={exercise} />)}
             </ul>
         </div>
     );

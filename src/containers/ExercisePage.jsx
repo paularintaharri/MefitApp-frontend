@@ -21,17 +21,20 @@ function ExercisePage() {
     }
 
     useEffect(() => {
-        async function fetchData() {
-            try {
-                const item = await getAllExercises();
-                setExercises(item);
-                setIsLoading(false);
-            } catch (error) {
-                console.error(error.message);
-            }
-        }
-        fetchData();
+        fetchData().then(exercises => {
+            setExercises(exercises);
+            setIsLoading(false);
+        })
     }, []);
+
+    async function fetchData() {
+        try {
+            const item = await getAllExercises();
+            return item;
+        } catch (error) {
+            console.error(error.message);
+        }
+    }
 
     useEffect(() => {
         if (exercises) {
@@ -45,7 +48,8 @@ function ExercisePage() {
 
     return (
         <Container className="bd-content ps-lg-4">
-            {!isLoading &&
+            {isLoading && <p>loading</p>}
+            {exercises.length > 0 && (
                 <div>
                     <h1>Exercises</h1>
                     <div className="nav justify-content-center">
@@ -68,7 +72,7 @@ function ExercisePage() {
                             onHide={() => setModalExerciseCreate(false)} />
                     </ButtonGroup>
                 </div>
-            }           
+            )}          
             { selectedexercise != null &&
                 <div className="nav justify-content-center">
                     <Form.Row className="align-items-center">
