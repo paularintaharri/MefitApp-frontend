@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-const apiUrl = 'http://me-fit-app.herokuapp.com/api/v1/exercises';
+const apiUrl = 'https://me-fit-app.herokuapp.com/api/v1/exercises';
 
 export const getAllExercises = async () => {
     return await axios.get(apiUrl)
