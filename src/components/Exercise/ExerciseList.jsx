@@ -3,12 +3,14 @@ import { useState, useEffect } from 'react'
 
 function ExerciseList(props) {
     const [exercises, setExercises] = useState([]);
+    const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
         async function geData() {
             try {
                 const item = await props.exercises;
                 setExercises(item);
+                setIsLoading(false);
             } catch (error) {
                 console.error(error.message);
             }
@@ -18,7 +20,7 @@ function ExerciseList(props) {
     return (
         <div>
             <ul>
-                {exercises.length !== 0 && exercises.map((exercise, index) => <ExerciseCard key={index} exercise={exercise} />)}
+                {!isLoading && exercises.map((exercise, index) => <ExerciseCard key={index} exercise={exercise} />)}
             </ul>
         </div>
     );
