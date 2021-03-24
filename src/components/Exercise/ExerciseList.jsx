@@ -1,28 +1,24 @@
 import ExerciseCard from "./ExerciseCard";
 import { useState, useEffect } from 'react'
-import { getAllExercises } from '../../utils/exerciseAPI'
 
-function ExerciseList() {
-
+function ExerciseList(props) {
     const [exercises, setExercises] = useState([]);
 
     useEffect(() => {
-        fetchData();
-    }, []);
-
-    async function fetchData() {
-        try {
-            const item = await getAllExercises();
-            setExercises(item);
-        } catch (error) {
-            console.error(error.message);
+        async function geData() {
+            try {
+                const item = await props.exercises;
+                setExercises(item);
+            } catch (error) {
+                console.error(error.message);
+            }
         }
-    }
-
+        geData()
+    }, []);
     return (
         <div>
             <ul>
-                {exercises.map((exercise, index) => <ExerciseCard key={index} exercise={exercise} />)}
+                {exercises.length !== 0 && exercises.map((exercise, index) => <ExerciseCard key={index} exercise={exercise} />)}
             </ul>
         </div>
     );

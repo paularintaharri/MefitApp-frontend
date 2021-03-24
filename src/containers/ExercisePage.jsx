@@ -43,26 +43,30 @@ function ExercisePage() {
 
     return (
         <Container className="bd-content ps-lg-4">
-            <h1>Exercises</h1>
-            <div className="nav justify-content-center">
-                <Form inline >
-                    <FormControl type="text" placeholder="Search" className="mr-sm-2" />
-                    <Button variant="outline-primary" onClick={() => sortByTargetMuscleGroup()}>Sort by target muscle group</Button>
-                </Form>
-            </div>
-            <ExerciseList />
-            <ButtonGroup className="mb-2 mr-2" aria-label="Update Exercise">
-                <Button
-                    type="button"
-                    className="btn btn-primary"
-                    variant="primary"
-                    onClick={() => setModalExerciseCreate(true)}>
-                    Create New Exercise
-                    </Button>
-                <CreateExercise
-                    show={modalExerciseCreate}
-                    onHide={() => setModalExerciseCreate(false)} />
-            </ButtonGroup>
+            {exercises.length !== 0 &&
+                <div>
+                    <h1>Exercises</h1>
+                    <div className="nav justify-content-center">
+                        <Form inline >
+                            <FormControl type="text" placeholder="Search" className="mr-sm-2" />
+                            <Button variant="outline-primary" onClick={() => sortByTargetMuscleGroup()}>Sort by target muscle group</Button>
+                        </Form>
+                    </div>
+                    <ExerciseList exercises={exercises}/>
+                    <ButtonGroup className="mb-2 mr-2" aria-label="Update Exercise">
+                        <Button
+                            type="button"
+                            className="btn btn-primary"
+                            variant="primary"
+                            onClick={() => setModalExerciseCreate(true)}>
+                            Create New Exercise
+                            </Button>
+                        <CreateExercise
+                            show={modalExerciseCreate}
+                            onHide={() => setModalExerciseCreate(false)} />
+                    </ButtonGroup>
+                </div>
+            }           
             { selectedexercise != null &&
                 <div className="nav justify-content-center">
                     <Form.Row className="align-items-center">
