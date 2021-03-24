@@ -11,6 +11,7 @@ function ExercisePage() {
     const [modalExerciseUpdate, setModalExerciseUpdate] = useState(false);
     const [exercises, setExercises] = useState([]);
     const [selectedexercise, setSelectedExercise] = useState();
+    const [isLoading, setIsLoading] = useState(true);
 
     function sortByTargetMuscleGroup() {
     }
@@ -24,6 +25,7 @@ function ExercisePage() {
             try {
                 const item = await getAllExercises();
                 setExercises(item);
+                setIsLoading(false);
             } catch (error) {
                 console.error(error.message);
             }
@@ -43,7 +45,7 @@ function ExercisePage() {
 
     return (
         <Container className="bd-content ps-lg-4">
-            {exercises.length !== 0 &&
+            {!isLoading &&
                 <div>
                     <h1>Exercises</h1>
                     <div className="nav justify-content-center">
