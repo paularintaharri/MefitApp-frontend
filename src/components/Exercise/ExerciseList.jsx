@@ -1,5 +1,5 @@
 import ExerciseCard from "./ExerciseCard";
-import {Form, FormControl } from "react-bootstrap";
+import { Form, FormControl } from "react-bootstrap";
 import { useState, useEffect } from 'react'
 
 function ExerciseList(props) {

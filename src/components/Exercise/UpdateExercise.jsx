@@ -23,7 +23,7 @@ function UpdateExercise(props) {
     }
 
     const findFormErrors = () => {
-        const { name, description, target_muscle_group, vid_link } = form
+        const { name, target_muscle_group } = form
         var regex = /^[A-Za-z0-9]+(?:[ _-][A-Za-z0-9]+)*$/;
         const newErrors = {}
         if (!name || name === '') {
@@ -73,8 +73,7 @@ function UpdateExercise(props) {
                                 <Form.Control
                                     plaintext
                                     readOnly
-                                    defaultValue={exercise.id}
-                                    onChange={e => setField('id', e.target.value)} />
+                                    defaultValue={exercise.id}/>
                             </Col>
                         </Form.Group>
                         <Form.Group>
@@ -99,7 +98,8 @@ function UpdateExercise(props) {
                                 isInvalid={!!errors.description} />
                             <Form.Control.Feedback type='invalid'>
                                 {errors.description}
-                            </Form.Control.Feedback>                        </Form.Group>
+                            </Form.Control.Feedback>   
+                        </Form.Group>
                         <Form.Group>
                             <Form.Label>Target muscle group</Form.Label>
                             <Form.Control type="text"

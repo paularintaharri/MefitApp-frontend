@@ -3,7 +3,6 @@ import { useState } from 'react'
 import { createExercises } from '../../utils/exerciseAPI'
 
 function CreateExercise(props) {
-
     const [errors, setErrors] = useState({})
     const [form, setForm] = useState({})
 
@@ -19,7 +18,7 @@ function CreateExercise(props) {
     }
 
     const findFormErrors = () => {
-        const { name, description, target_muscle_group, vid_link } = form
+        const { name, target_muscle_group } = form
         var regex = /^[A-Za-z0-9]+(?:[ _-][A-Za-z0-9]+)*$/;
         const newErrors = {}
         if (!name || name === '') {

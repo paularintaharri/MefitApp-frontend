@@ -1,8 +1,9 @@
 import { Card } from "react-bootstrap";
 import ExerciseCard from "../Exercise/ExerciseCard";
 
-function WorkoutDetails() {;
+function WorkoutDetails(props) {;
 
+    //Get exersises by weorkout
     return (
         <Card.Body>
             {/* <ExerciseCard /> */}
