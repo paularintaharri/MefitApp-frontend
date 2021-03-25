@@ -20,7 +20,7 @@ function CreateExercise(props) {
 
     const findFormErrors = () => {
         const { name, description, target_muscle_group, vid_link } = form
-        var regex = /^[A-Za-z ]+$/;
+        var regex = /^[A-Za-z0-9]+(?:[ _-][A-Za-z0-9]+)*$/;
         const newErrors = {}
         if (!name || name === '') {
             newErrors.name = 'cannot be blank!'
@@ -33,9 +33,6 @@ function CreateExercise(props) {
             newErrors.target_muscle_group = 'add a target muscle group!'
         } else if (!target_muscle_group.match(regex)) {
             newErrors.target_muscle_group = 'field must not include spesial characters'
-        }
-        if (!description.match(regex)) {
-            newErrors.description = 'field must not include spesial characters'
         }
         return newErrors
     }
