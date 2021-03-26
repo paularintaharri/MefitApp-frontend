@@ -37,3 +37,11 @@ export const updateWorkout = async (form) => {
             console.log(error);
         })
 }
+
+export const getSetsForWorkout = async (workout) => {
+    return await axios.get(apiUrl + "/" + workout.id + "/sets" )
+        .then(response => response.data)
+        .catch((error) => {
+            console.log(error);
+        })
+}

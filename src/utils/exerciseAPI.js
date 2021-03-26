@@ -1,9 +1,18 @@
 import axios from 'axios'
 
 const apiUrl = 'https://me-fit-app.herokuapp.com/api/v1/exercises';
+const apiUrlGetExercise = 'https://me-fit-app.herokuapp.com';
 
 export const getAllExercises = async () => {
     return await axios.get(apiUrl)
+        .then(response => response.data)
+        .catch((error) => {
+            console.log(error);
+        })
+}
+
+export const getExerciseById = async (id) => {
+    return await axios.get(apiUrlGetExercise + id)
         .then(response => response.data)
         .catch((error) => {
             console.log(error);
