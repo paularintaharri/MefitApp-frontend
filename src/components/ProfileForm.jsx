@@ -7,7 +7,7 @@ import './ProfileForm.css';
 
 function ProfileForm() {
 
-    const url = 'http://localhost:8080/api/v1/profiles/';
+    const url = 'https://me-fit-app.herokuapp.com/';
 
     const [preloadedProfileValues, setPreloadedProfileValues] = useState({});
     const [preloadedUserValues, setPreloadedUserValues] = useState({});
@@ -66,6 +66,7 @@ function ProfileForm() {
     
 
     async function postProfileData(params) {
+        console.log(params)
         try {
             let response = await fetch(url, {
                 method: 'POST',
@@ -75,6 +76,7 @@ function ProfileForm() {
                     'Authorization': `Bearer ${token}`
                 },
                 body: JSON.stringify({
+                    "id": tokenParsed.sub,
                     "weight": params.weight,
                     "height": params.height,
                     "medical_conditions": params.medical_conditions,
@@ -83,7 +85,7 @@ function ProfileForm() {
                 })
             });
             let responseJson = await response.json();
-            console.log(response);
+            console.log(responseJson);
             return responseJson.result;
         } catch (error) {
             console.log("error is: " + error);

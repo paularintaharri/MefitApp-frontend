@@ -1,6 +1,6 @@
 {
   "realm": "mefitapp",
-  "auth-server-url": "http://localhost:8083/auth/",
+  "auth-server-url": "https://me-fit-app-keycloak.herokuapp.com/auth",
   "ssl-required": "external",
   "resource": "myclient",
   "public-client": true,

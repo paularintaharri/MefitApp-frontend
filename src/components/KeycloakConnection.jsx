@@ -9,7 +9,7 @@ function KeycloakConnection() {
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [keycloak, setKeycloak] = useState({});
 
-    const url = 'http://localhost:8080/api/v1/profiles/';
+    const url = 'https://me-fit-app.herokuapp.com/';
     const history = useHistory();
 
     useEffect(() => {
