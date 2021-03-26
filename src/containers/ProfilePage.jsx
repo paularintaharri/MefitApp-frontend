@@ -6,8 +6,6 @@ import ApplicationFrame from '../components/ApplicationFrame';
 
 function ProfilePage() {
 
-
-
     return (
         <div>
             <ApplicationFrame />
@@ -19,15 +17,3 @@ function ProfilePage() {
 }
 
 export default ProfilePage;
-
-/*
-
-const ProfilePage = () => (
-    <div>
-        <h1>Profile page</h1>
-    </div>
-);
-
-export default ProfilePage;
-
-*/
