@@ -2,6 +2,7 @@
 import { Navbar, Nav, Form, FormControl, Button } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './ApplicationFrame.css';
+import KeycloakConnection from './KeycloakConnection';
 
 function ApplicationFrame() {
     return (
@@ -12,6 +13,9 @@ function ApplicationFrame() {
                     <Nav.Link href="#home">Home</Nav.Link>
                     <Nav.Link href="#features">Features</Nav.Link>
                     <Nav.Link href="#pricing">Pricing</Nav.Link>
+                </Nav>
+                <Nav className="mr-auto">
+                    <KeycloakConnection />
                 </Nav>
                 <Form inline>
                     <FormControl type="text" placeholder="Search" className="mr-sm-2" />
