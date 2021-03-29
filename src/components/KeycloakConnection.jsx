@@ -9,19 +9,19 @@ function KeycloakConnection() {
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [keycloak, setKeycloak] = useState({});
 
-    const url = 'https://me-fit-app.herokuapp.com/';
+    const url = 'https://me-fit-app.herokuapp.com/api/v1/profiles/';
     const history = useHistory();
 
     useEffect(() => {
         if (!isAuthenticated) {
             const keycloak = Keycloak('/keycloak.json');
-            keycloak.init({ onLoad: 'login-required' }).then(() => { 
+            keycloak.init({ onLoad: 'login-required' }).then(() => {
                 // setIsAuthenticated(true);         
-                setKeycloak(keycloak);      
+                setKeycloak(keycloak);
             })
-        }        
+        }
     }, [isAuthenticated]);
-    
+
     function handleLoginComplete(keycloak) {
         let token = keycloak.token;
         let tokenParsed = keycloak.tokenParsed;
@@ -41,7 +41,7 @@ function KeycloakConnection() {
                     'Authorization': `Bearer ${keycloak.token}`
                 },
             });
-            
+
             if (response.status === 404) {
                 history.replace('/profile');
             } else if (response.status === 200) {
@@ -58,13 +58,13 @@ function KeycloakConnection() {
         if (!isAuthenticated) {
             handleLoginComplete(keycloak);
             setIsAuthenticated(true);
-        } 
+        }
         return (
             <div>
-                <button onClick={ () => {
+                <button onClick={() => {
                     keycloak.logout();
                     cleareUserStorage();
-                } }>Logout</button>
+                }}>Logout</button>
             </div>
 
         )
@@ -73,7 +73,7 @@ function KeycloakConnection() {
             <div></div>
         )
     }
-        
+
 };
 
 export default KeycloakConnection;
