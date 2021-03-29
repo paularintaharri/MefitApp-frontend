@@ -2,103 +2,90 @@ import React, { useState } from "react";
 import { Form, Button } from 'react-bootstrap';
 import { useForm } from "react-hook-form";
 import { useEffect } from 'react';
+import { setUserStorage, getUserStorage } from '../utils/userStorage';
 import './ProfileForm.css';
 
 function ProfileForm() {
 
-    const id = '14';
-    const Url = 'http://me-fit-app.herokuapp.com/api/v1/profiles/';
-    const userUrl = 'http://me-fit-app.herokuapp.com/api/v1/users/';
-
+    const url = 'https://me-fit-app.herokuapp.com/api/v1/profiles/';
 
     const [preloadedProfileValues, setPreloadedProfileValues] = useState({});
     const [preloadedUserValues, setPreloadedUserValues] = useState({});
     const [buttonText, setButtonText] = useState("register");
+    const [id, setId] = useState();
+    // const [token, setToken] = useState({});
+    // const [tokenParsed, setTokenParsed] = useState({});
 
-    useEffect(() => {
 
-        getUserData(id).then(data => {
-            setPreloadedUserValues(data)
-            let temp = String((data.profile).slice(17, 20))
-            getProfileData(temp).then(newData => setPreloadedProfileValues(newData))
-            setButtonText("Update");
-        })
-    }, []);
+    // useEffect(() => {
+    const { token, tokenParsed } = getUserStorage('ra_session')
+    // setToken(token);
+    // setTokenParsed(tokenParsed);
+
+    // }, [token, tokenParsed]);
+
+    async function getProfileData(id) {
+        try {
+            let response = await fetch(url + id, {
+                method: 'GET',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+            });
+
+            let responseJson = await response.json();
+            console.log(responseJson)
+            setPreloadedProfileValues(responseJson);
+        } catch (error) {
+            console.log("error is: " + error);
+        }
+    }
 
 
     const { register, handleSubmit } = useForm({
         //defaultValues: valuesFromServer
     });
 
-    function processData(params) {
-        params.preventDefault()
+    async function processData(params) {
+        // params.preventDefault()
         console.log("lähettäää");
-        if (id) { // tarkasta onko profiilia olemassa tietokannassa, jos ei niin aja
-            postProfileData(params);
-            // postUserData(params);
-            setButtonText("Update");
-        }
+        // if (id) {
+        postProfileData(params);
+        // postUserData(params);
+        // setButtonText("Update");
+        // }
 
-        else {
-            patchProfileData(params);
-            //  patchUserData(params);
-            setButtonText("Update");
-        }
+        // else {
+        //     patchProfileData(params);
+        //     //  patchUserData(params);
+        //     setButtonText("Update");
+        // }
     }
 
-    async function getProfileData(id) {
-        try {
-            let response = await fetch(Url + id, {
-                method: 'GET',
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json',
-                },
-            });
-            let responseJson = await response.json();
-            return responseJson;
-        } catch (error) {
-            console.log("error is: " + error);
-        }
-    }
-
-    async function getUserData(id) {
-        try {
-            let response = await fetch(userUrl + id, {
-                method: 'GET',
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json',
-                },
-            });
-            let responseJson = await response.json();
-            return responseJson;
-        } catch (error) {
-            console.log("error is: " + error);
-        }
-    }
 
     async function postProfileData(params) {
+        console.log(params)
         try {
-            let response = await fetch(Url, {
+            let response = await fetch(url, {
                 method: 'POST',
                 headers: {
                     'Accept': 'application/json',
                     'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
                 },
                 body: JSON.stringify({
-                    "first_name": params.first_name,
-                    "last_name": params.last_name,
+                    "id": tokenParsed.sub,
                     "weight": params.weight,
                     "height": params.height,
                     "medical_conditions": params.medical_conditions,
                     "disabilities": params.disabilities,
                     "image_link": params.image_link,
-                    "app_user": { "id": id }
                 })
             });
             let responseJson = await response.json();
-            console.log(response);
+            console.log("response JSON: " + responseJson);
             return responseJson.result;
         } catch (error) {
             console.log("error is: " + error);
@@ -107,11 +94,12 @@ function ProfileForm() {
 
     async function patchProfileData(params) {
         try {
-            let response = await fetch(Url + id, {
+            let response = await fetch(url + id, {
                 method: 'PATCH',
                 headers: {
                     'Accept': 'application/json',
                     'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
                 },
                 body: JSON.stringify({
                     "id": id,
@@ -133,51 +121,9 @@ function ProfileForm() {
     }
 
     return (
-
-
-
         <div>
             <div id="form">
                 <Form onSubmit={handleSubmit(processData)}>
-                    <Form.Group controlId="formEmail">
-                        <Form.Label>Email address</Form.Label>
-                        <Form.Control
-                            ref={register}
-                            defaultValue={preloadedUserValues.email}
-                            type="text"
-                            name="email"
-                        />
-                    </Form.Group>
-                    <br />
-                    <Form.Group controlId="formPassword">
-                        <Form.Label>Password</Form.Label>
-                        <Form.Control
-                            ref={register}
-                            defaultValue={preloadedUserValues.password}
-                            type="text"
-                            name="password"
-                        />
-                    </Form.Group>
-                    <br />
-                    <Form.Group controlId="formFirstName">
-                        <Form.Label>First name</Form.Label>
-                        <Form.Control
-                            ref={register}
-                            defaultValue={preloadedProfileValues.first_name}
-                            type="text"
-                            name="first_name"
-                        />
-                    </Form.Group>
-                    <br />
-                    <Form.Group controlId="formLastName">
-                        <Form.Label>Last name</Form.Label>
-                        <Form.Control
-                            ref={register}
-                            defaultValue={preloadedProfileValues.last_name}
-                            type="text"
-                            name="last_name"
-                        />
-                    </Form.Group>
                     <br />
                     <Form.Group controlId="formHeight">
                         <Form.Label>Height</Form.Label>
@@ -228,10 +174,10 @@ function ProfileForm() {
                             name="image_link"
                         />
                     </Form.Group>
-                    <br />
+                    {/* <br />
                     <Form.Group controlId="formBasicChecbox">
                         <Form.Check name="checkBox" type="checkbox" label="I want to be a contributor" value="false" defaultChecked={preloadedUserValues.is_contributor} />
-                    </Form.Group>
+                    </Form.Group> */}
                     <Button variant="primary" size="lg" type="submit" >{buttonText}</Button>
                 </Form>
             </div>

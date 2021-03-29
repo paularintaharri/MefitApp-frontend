@@ -3,6 +3,7 @@ import { Button, Nav, Navbar, NavDropdown, MenuItem, NavItem } from 'react-boots
 import { LinkContainer } from 'react-router-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './ApplicationFrame.css';
+import KeycloakConnection from './KeycloakConnection';
 
 
 
@@ -66,6 +67,9 @@ function ApplicationFrame() {
                 <LinkContainer to="/404">
                     <Nav.Link >Logout</Nav.Link>
                 </LinkContainer>
+                <Nav className="mr-auto">
+                    <KeycloakConnection />
+                </Nav>
             </Navbar>
         </div>
     )
