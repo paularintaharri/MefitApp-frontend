@@ -7,7 +7,7 @@ import './ProfileForm.css';
 
 function ProfileForm() {
 
-    const url = 'https://me-fit-app.herokuapp.com/';
+    const url = 'https://me-fit-app.herokuapp.com/api/v1/profiles/';
 
     const [preloadedProfileValues, setPreloadedProfileValues] = useState({});
     const [preloadedUserValues, setPreloadedUserValues] = useState({});
@@ -18,10 +18,10 @@ function ProfileForm() {
 
 
     // useEffect(() => {
-        const { token, tokenParsed } = getUserStorage('ra_session')
-        // setToken(token);
-        // setTokenParsed(tokenParsed);
-                
+    const { token, tokenParsed } = getUserStorage('ra_session')
+    // setToken(token);
+    // setTokenParsed(tokenParsed);
+
     // }, [token, tokenParsed]);
 
     async function getProfileData(id) {
@@ -34,7 +34,7 @@ function ProfileForm() {
                     'Authorization': `Bearer ${token}`
                 },
             });
-            
+
             let responseJson = await response.json();
             console.log(responseJson)
             setPreloadedProfileValues(responseJson);
@@ -52,9 +52,9 @@ function ProfileForm() {
         // params.preventDefault()
         console.log("lähettäää");
         // if (id) {
-            postProfileData(params);
-            // postUserData(params);
-            // setButtonText("Update");
+        postProfileData(params);
+        // postUserData(params);
+        // setButtonText("Update");
         // }
 
         // else {
@@ -63,7 +63,7 @@ function ProfileForm() {
         //     setButtonText("Update");
         // }
     }
-    
+
 
     async function postProfileData(params) {
         console.log(params)
@@ -85,7 +85,7 @@ function ProfileForm() {
                 })
             });
             let responseJson = await response.json();
-            console.log(responseJson);
+            console.log("response JSON: " + responseJson);
             return responseJson.result;
         } catch (error) {
             console.log("error is: " + error);
