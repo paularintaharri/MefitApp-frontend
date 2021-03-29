@@ -14,20 +14,16 @@ function ProfileForm() {
     const [preloadedProfileValues, setPreloadedProfileValues] = useState({});
     const [preloadedUserValues, setPreloadedUserValues] = useState({});
     const [buttonText, setButtonText] = useState("register");
-    const [profileId, setProfileId] = useState();
-
 
     useEffect(() => {
-        getUserData(id).then(data => setPreloadedUserValues(data))
-        //setProfileId(String((preloadedUserValues.profile).slice(17, 20)))
 
-
-        if (profileId) {
-            getProfileData(profileId).then(data => setPreloadedProfileValues(data))
+        getUserData(id).then(data => {
+            setPreloadedUserValues(data)
+            let temp = String((data.profile).slice(17, 20))
+            getProfileData(temp).then(newData => setPreloadedProfileValues(newData))
             setButtonText("Update");
-        }
-
-    }, [profileId]);
+        })
+    }, []);
 
 
     const { register, handleSubmit } = useForm({
@@ -37,7 +33,7 @@ function ProfileForm() {
     function processData(params) {
         params.preventDefault()
         console.log("lähettäää");
-        if (id) {
+        if (id) { // tarkasta onko profiilia olemassa tietokannassa, jos ei niin aja
             postProfileData(params);
             // postUserData(params);
             setButtonText("Update");
