@@ -10,21 +10,30 @@ function ProfileForm() {
     const url = 'https://me-fit-app.herokuapp.com/api/v1/profiles/';
 
     const [preloadedProfileValues, setPreloadedProfileValues] = useState({});
-    const [preloadedUserValues, setPreloadedUserValues] = useState({});
     const [buttonText, setButtonText] = useState("register");
-    const [id, setId] = useState();
-    // const [token, setToken] = useState({});
-    // const [tokenParsed, setTokenParsed] = useState({});
 
 
-    // useEffect(() => {
-    const { token, tokenParsed } = getUserStorage('ra_session')
-    // setToken(token);
-    // setTokenParsed(tokenParsed);
+    //const [storageData, setStorageData] = useState({})
 
-    // }, [token, tokenParsed]);
+    //setId(tokenParsed.sub);
+    //console.log("ASETETTU ID: " + tokenParsed.sub);
 
-    async function getProfileData(id) {
+
+
+
+    const [id, setId] = useState("");
+    const { token, tokenParsed } = getUserStorage('ra_session');
+    setId(tokenParsed.sub);
+
+
+    useEffect(() => {
+
+        setPreloadedProfileValues(getProfileData())
+
+    }, []);
+
+
+    async function getProfileData() {
         try {
             let response = await fetch(url + id, {
                 method: 'GET',
@@ -36,8 +45,8 @@ function ProfileForm() {
             });
 
             let responseJson = await response.json();
-            console.log(responseJson)
-            setPreloadedProfileValues(responseJson);
+            console.log("incoming profilevalues: " + JSON.stringify(responseJson));
+            return (responseJson);
         } catch (error) {
             console.log("error is: " + error);
         }

@@ -6,25 +6,31 @@ import ProfilePage from './containers/ProfilePage';
 import ExercisePage from './containers/ExercisePage';
 import WorkoutPage from './containers/WorkoutPage';
 import ProgramPage from './containers/ProgramPage';
+import DashBoardPage from './containers/DashBoardPage';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import KeycloakConnection from './components/KeycloakConnection';
+import ApplicationFrame from './components/ApplicationFrame';
 
 function App() {
   return (
-    <Router>
-      <Container className="App">
-        <main>
-          <Switch>     
-            <Route exact path="/" component={ NotFound } />
-            <Route exact path="/profile" component={ ProfilePage } />
-            <Route exact path="/exercises" component={ ExercisePage } />
-            <Route exact path="/workouts" component={ WorkoutPage } />
-            <Route exact path="/programs" component={ ProgramPage } />
-            <Route exact path="/*" component={ NotFound } />
-          </Switch>
-        </main>
-      </Container>
-    </Router>
+    <div>
+      <Router>
+        <Container className="App">
+          <ApplicationFrame />
+          <main>
+            <Switch>
+              <Route exact path="/" component={NotFound} />
+              <Route exact path="/dashboard" component={DashBoardPage} />
+              <Route exact path="/profile" component={ProfilePage} />
+              <Route exact path="/exercises" component={ExercisePage} />
+              <Route exact path="/workouts" component={WorkoutPage} />
+              <Route exact path="/programs" component={ProgramPage} />
+              <Route exact path="/*" component={NotFound} />
+            </Switch>
+          </main>
+        </Container>
+      </Router>
+    </div>
   );
 }
 

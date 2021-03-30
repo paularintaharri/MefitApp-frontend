@@ -47,6 +47,8 @@ function ExercisePage() {
     }
 
     return (
+
+
         <Container className="bd-content ps-lg-4">
             {isLoading && <p>loading</p>}
             {exercises.length !== 0 && (
@@ -58,7 +60,7 @@ function ExercisePage() {
                             <Button variant="outline-primary" onClick={() => sortByTargetMuscleGroup()}>Sort by target muscle group</Button>
                         </Form>
                     </div>
-                    <ExerciseList exercises={exercises}/>
+                    <ExerciseList exercises={exercises} />
                     <ButtonGroup className="mb-2 mr-2" aria-label="Update Exercise">
                         <Button
                             type="button"
@@ -72,8 +74,8 @@ function ExercisePage() {
                             onHide={() => setModalExerciseCreate(false)} />
                     </ButtonGroup>
                 </div>
-            )}          
-            { selectedexercise != null &&
+            )}
+            {selectedexercise != null &&
                 <div className="nav justify-content-center">
                     <Form.Row className="align-items-center">
                         <Col xs="auto" className="my-1">
@@ -96,6 +98,7 @@ function ExercisePage() {
                 </div>
             }
         </Container>
+
     );
 };
 

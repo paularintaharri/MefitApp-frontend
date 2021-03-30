@@ -5,17 +5,17 @@ import ProgramList from '../components/Program/ProgramList';
 import UpdateProgram from '../components/Program/UpdateProgram';
 import CreateProgram from '../components/Program/CreateProgram';
 
-
 function ProgramPage() {
 
     const [modalProgramCreate, setModalProgramCreate] = useState(false);
     const [modalProgramUpdate, setModalProgramUpdate] = useState(false);
 
-    function sortByCategory(){
+    function sortByCategory() {
 
     }
 
     return (
+
         <Container className="bd-content ps-lg-4">
             <h1>Programs</h1>
             <div className="nav justify-content-center">
@@ -24,7 +24,7 @@ function ProgramPage() {
                     <Button variant="outline-primary" onClick={() => sortByCategory()}>Sort by Category</Button>
                 </Form>
             </div>
-            <ProgramList/>
+            <ProgramList />
 
             <ButtonGroup className="mb-2 mr-2" aria-label="Update Program">
                 <Button type="button" className="btn btn-primary" variant="primary" onClick={() => setModalProgramCreate(true)}>Create New Program</Button>
