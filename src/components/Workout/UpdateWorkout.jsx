@@ -52,10 +52,11 @@ function UpdateWorkout(props) {
         } else {
             try {
                 await updateWorkout(form);
+                alert('Submitted!')
             } catch (error) {
                 console.error(error.message);
+                alert('Error!')
             }
-            alert('Submitted!')
             props.onHide()
         }
     };

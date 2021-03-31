@@ -8,9 +8,11 @@ function WorkoutDetails(props) {
     const currentWorkout = props.workout;
     const [sets, setSets] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
-    const [exerciseDetails, setExerciseDetails] = useState([]);
+    const [exerciseIds, setExerciseIds] = useState([]);
+    const [repetitions, setRepetitions] = useState([]);
+    const [exercises, setExercises] = useState([]);
 
-    //Get sets of the workout
+    // Get sets of the workout
     useEffect(() => {
         async function fetchSetData() {
             try {
@@ -20,47 +22,65 @@ function WorkoutDetails(props) {
                 console.error(error.message);
             }
         }
-        fetchSetData().then(sets => {
-            setSets(sets);
-            setIsLoading(false);
+
+        async function fetchExersiseData(exerciseId) {
+            try {
+                const item = await getExerciseById(exerciseId);
+                return item;
+            } catch (error) {
+                console.error(error.message);
+            }
+        }
+
+        fetchSetData().then(setsdata => {
+            setSets(setsdata);
+
+            const repetition = [];
+            const id = [];
+            sets.map(item => {
+                repetition.push(item.exercise_repetitions)
+                id.push(item.exercise)
+            })
+            setRepetitions(repetition);
+            setExerciseIds(id);
+
+            if (exercises.length == 0 && exercises.length <= repetitions.length) {
+
+                addExerciseToList();
+            }
         })
     }, [currentWorkout]);
 
-    //loop list of sets
-    function getSet() {
-        return sets.map(function (item, i) {
-            return (
-                <div>
-                    {/* {getExersise(item.exercise)} */}
-                    <p key={i}>{item.exercise_repetitions}</p>
-                </div>
-            )
+    // map exerrcise id`s and get data
+    function addExerciseToList() {
+        exerciseIds.map(item => {
+            fetchExersiseData(item);
         })
     }
 
-    //create exercise card KESKEN
-    async function getExersise(exerciseId) {
-        console.log(exerciseId)
-        // try {
-        //     let item = await getExerciseById(exerciseId);
-        //     console.log(item)
-        //     return (
-        //         <li className="list-group-item">{item.name}</li>
-        //         // exercises.map((exercise, index) => 
-        //         //     <ExerciseCard key={index} exercise={exercise} />)}
-        //     )
-        // } catch (error) {
-        //     console.error(error.message);
-        // }
+    // get exercise by id
+    async function fetchExersiseData(exerciseId) {
+        const item = await getExerciseById(exerciseId);
+        setExercises(oldArray => [...oldArray, item]);
     }
+
+    // console.log(sets) //sets latautuu kun sivu latautuu
+    // console.log(exerciseIds) //ok
+    // console.log(repetitions)// ok
+    // console.log(exercises)
 
     return (
         <Card.Body>
             <ul>
-                {isLoading && <p>loading</p>}
-                {getSet()}
+                {exercises.map((exercise, i) =>
+                    <div>
+                        <p>Repetitions: {repetitions[i]}</p>
+                        <ExerciseCard exercise={exercise} />
+                    </div>
+                )}
             </ul>
         </Card.Body>
+
     );
 };
 

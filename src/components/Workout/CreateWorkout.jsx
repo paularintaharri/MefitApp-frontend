@@ -1,12 +1,22 @@
-import { Modal, Card, Button, Form } from "react-bootstrap";
-import { useState } from 'react'
+import { Modal, Card, Button, Form, Col } from "react-bootstrap";
+import { useState, useRef, useEffect } from 'react'
 import { createWorkout } from '../../utils/workoutAPI'
+import { createSet } from '../../utils/setAPI'
 
 function CreateWorkout(props) {
-
+    const [exercises, setExercises] = useState(props.exercises)
     const [errors, setErrors] = useState({})
     const [form, setForm] = useState({})
+    const [exerciseSetList, setExerciseSetList] = useState([]);
+    const [setId, setSetId] = useState([]);
+    const [exerciseinput, setExerciseInput] = useState(exercises[0].id);
+    const setinput = useRef();
 
+    useEffect(() => {
+        setField('exerciseSets', setId)
+    }, [setId]);
+
+    //set form inputs to state
     const setField = (field, value) => {
         setForm({
             ...form,
@@ -18,6 +28,7 @@ function CreateWorkout(props) {
         })
     }
 
+    //find errors
     const findFormErrors = () => {
         const { name, type } = form
         var regex = /^[A-Za-z0-9]+(?:[ _-][A-Za-z0-9]+)*$/;
@@ -37,21 +48,43 @@ function CreateWorkout(props) {
         return newErrors
     }
 
+    //crete new workout
     async function onSubmitClicked(e) {
-        e.preventDefault()
-        const newErrors = findFormErrors()
+        e.preventDefault();
+        const newErrors = findFormErrors();
         if (Object.keys(newErrors).length !== 0) {
             setErrors(newErrors)
         } else {
             try {
                 await createWorkout(form);
+                alert('Submitted!')
             } catch (error) {
                 console.error(error.message);
+                alert('Error!')
             }
-            alert('Submitted!')
             props.onHide()
         }
     };
+
+    //create new set
+    function addToList(e) {
+        e.preventDefault();
+        const newSet = ({ exercise: { "id": exerciseinput }, exercise_repetitions: parseInt(setinput.current.value) });
+        setExerciseSetList([...exerciseSetList, { exercise: exerciseinput, exercise_repetitions: parseInt(setinput.current.value) }]);
+        createNewSet(newSet);
+    }
+
+    async function createNewSet(newSet) {
+        try {
+            const id = await createSet(newSet);
+            setSetId([...setId, { 'id': id }]);
+        } catch (error) {
+            console.error(error.message);
+        }
+    }
+
+    console.log(exerciseinput)
+    console.log(setinput)
 
     return (
         <Modal {...props} size="lg" aria-labelledby="contained-modal-title-vcenter" centered>
@@ -85,26 +118,49 @@ function CreateWorkout(props) {
                                 {errors.type}
                             </Form.Control.Feedback>
                         </Form.Group>
+
                         <Form.Group>
-                            <Form.Label>Sets</Form.Label>
-                            <Form.Control type="sets" placeholder="Sets" />
+                            <Form.Label>Selected exercises</Form.Label> <br></br>
+                            {exerciseSetList.map(set =>
+                                <p>exercise id: {set.exercise} repetitions: {set.exercise_repetitions}</p>
+                            )}
                         </Form.Group>
-                        {/* <Form.Group>
-                            <Form.Label>Exercises included</Form.Label>
-                            <Form.Control as="select" multiple>
-                                <option>1</option>
-                                <option>2</option>
-                                <option>3</option>
-                                <option>4</option>
-                                <option>5</option>
-                            </Form.Control>
-                        </Form.Group> */}
                         <Button type="submit">Submit</Button>
+                    </Form>
+
+                    <Form onSubmit={addToList}>
+                        <Card>
+                            <Card.Body>
+                                <Form.Row>
+                                    <Form.Group as={Col}>
+                                        <Form.Label>Sets</Form.Label>
+                                        <Form.Control type="text"
+                                            placeholder="10"
+                                            required
+                                            ref={setinput} />
+                                    </Form.Group>
+                                    <Form.Group as={Col} >
+                                        <Form.Label>Exercises</Form.Label>
+                                        <Form.Control
+                                            onChange={(e) => setExerciseInput(exercises[e.target.value].id)}
+                                            as="select" className="mr-sm-2" custom required>
+                                            {exercises.map((exercise, index) =>
+                                                <option key={index} value={index}>
+                                                    {exercise.id}: {exercise.name}
+                                                </option>)}
+                                        </Form.Control>
+                                    </Form.Group>
+                                    <Form.Group as={Col}>
+                                        <Button style={{ margin: '2em 0' }} type="submit">Add ecersise</Button>
+                                    </Form.Group>
+                                </Form.Row>
+                            </Card.Body>
+                        </Card>
                     </Form>
                 </Card.Body>
             </Modal.Body>
             <Modal.Footer>
-            <Button onClick={props.onHide}>Close</Button>
+                <Button onClick={props.onHide}>Close</Button>
             </Modal.Footer>
         </Modal>
     );

@@ -49,10 +49,12 @@ function UpdateExercise(props) {
         } else {
             try {
                 await updateExercises(form);
+                console.log(form)
+                alert('Submitted!')
             } catch (error) {
                 console.error(error.message);
+                alert('Error!')
             }
-            alert('Submitted!')
             props.onHide()
         }
     };

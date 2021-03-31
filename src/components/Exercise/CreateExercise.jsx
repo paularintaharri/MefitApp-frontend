@@ -44,10 +44,11 @@ function CreateExercise(props) {
         } else {
             try {
                 await createExercises(form);
+                alert('Submitted!')
             } catch (error) {
                 console.error(error.message);
+                alert('Error!')
             }
-            alert('Submitted!')
             props.onHide()
         }
     };

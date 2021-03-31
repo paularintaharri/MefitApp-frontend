@@ -4,21 +4,20 @@ import { Button, Form, Container, ButtonGroup, Col } from "react-bootstrap";
 import WorkoutList from '../components/Workout/WorkoutList';
 import CreateWorkout from '../components/Workout/CreateWorkout';
 import UpdateWorkout from '../components/Workout/UpdateWorkout';
-import { getAllWorkouts } from '../utils/workoutAPI'
+import { getAllWorkouts } from '../utils/workoutAPI';
+import { getAllExercises } from "../utils/exerciseAPI";
 
 function WorkoutPage() {
     const [modalWorkoutCreate, setModalWorkoutCreate] = useState(false);
     const [modalWorkoutUpdate, setModalWorkoutUpdate] = useState(false);
     const [workouts, setWorkouts] = useState([]);
+    const [exercises, setExercises] = useState([]);
+
     const [selectedworkout, setSelectedWorkout] = useState();
     const [isLoading, setIsLoading] = useState(true);
 
-    function handleChange(newValue) {
-        setSelectedWorkout(workouts[newValue])
-    }
-
     useEffect(() => {
-        async function fetchData() {
+        async function fetchWorkoutData() {
             try {
                 const item = await getAllWorkouts();
                 return item;
@@ -26,8 +25,21 @@ function WorkoutPage() {
                 console.error(error.message);
             }
         }
-        fetchData().then(workouts => {
+        fetchWorkoutData().then(workouts => {
             setWorkouts(workouts);
+            setIsLoading(false);
+        })
+
+        async function fetchExerciseData() {
+            try {
+                const item = await getAllExercises();
+                return item;
+            } catch (error) {
+                console.error(error.message);
+            }
+        }
+        fetchExerciseData().then(exercises => {
+            setExercises(exercises);
             setIsLoading(false);
         })
     }, []);
@@ -55,6 +67,7 @@ function WorkoutPage() {
                     </Button>
                         <CreateWorkout
                             show={modalWorkoutCreate}
+                            exercises={exercises}
                             onHide={() => setModalWorkoutCreate(false)} />
                     </ButtonGroup>
                 </div>
@@ -64,7 +77,7 @@ function WorkoutPage() {
                     <Form.Row className="align-items-center">
                         <Col xs="auto" className="my-1">
                             <Form.Control
-                                onChange={(e) => handleChange(e.target.value)}
+                                onChange={(e) => setSelectedWorkout(workouts[e.target.value])}
                                 as="select" className="mr-sm-2" custom>
                                 {workouts.map((workout, index) =>
                                     <option key={index} value={index}>
