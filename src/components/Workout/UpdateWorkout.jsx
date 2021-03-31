@@ -1,16 +1,51 @@
 import { Modal, Card, Button, Form, Row, Col } from "react-bootstrap";
-import { useState, useEffect } from 'react'
-import { updateWorkout } from '../../utils/workoutAPI'
+import { useState, useRef, useEffect } from 'react'
+import { updateWorkout, getSetsForWorkout } from '../../utils/workoutAPI'
+import { createSet } from '../../utils/setAPI'
 
 function UpdateWorkout(props) {
     const workout = props.selectedworkout;
+    const [exercises, setExercises] = useState(props.exercises)
     const [errors, setErrors] = useState({})
     const [form, setForm] = useState({})
+    const [sets, setSets] = useState([]);
+    const [exerciseSetList, setExerciseSetList] = useState([]);
+    const [setId, setSetId] = useState([]);
+    const [exerciseinput, setExerciseInput] = useState();
+    const setinput = useRef();
 
+    //set current workout details to form
     useEffect(() => {
         setForm(workout);
     }, [workout]);
 
+    useEffect(() => {
+        setField('exerciseSets', setId);
+    }, [setId]);
+
+    useEffect(() => {
+        sets.map(set => {
+            setSetId([...setId, { 'id': set.id }]);
+            setExerciseSetList([...exerciseSetList, { exercise: set.exercise.slice(18), exercise_repetitions: set.exercise_repetitions }]);
+        })
+    }, [sets]);
+
+    //get sets of the workout
+    useEffect(() => {
+        async function fetchSetData() {
+            try {
+                const item = await getSetsForWorkout(workout);
+                return item;
+            } catch (error) {
+                console.error(error.message);
+            }
+        }
+        fetchSetData().then(setsdata => {           
+            setSets(setsdata);
+        })
+    }, [workout]);
+
+    //set form fields
     const setField = (field, value) => {
         setForm({
             ...form,
@@ -22,6 +57,7 @@ function UpdateWorkout(props) {
         })
     }
 
+    //validation
     const findFormErrors = () => {
         const { name, type } = form
         var regex = /^[A-Za-z0-9]+(?:[ _-][A-Za-z0-9]+)*$/;
@@ -41,11 +77,11 @@ function UpdateWorkout(props) {
         return newErrors
     }
 
+    //submit form
     async function onSubmitClicked(e) {
         delete form['profiles']
         delete form['programs']
         delete form['goals']
-        delete form['exerciseSets']
         e.preventDefault()
         const newErrors = findFormErrors()
         if (Object.keys(newErrors).length !== 0) {
@@ -61,6 +97,27 @@ function UpdateWorkout(props) {
             props.onHide()
         }
     };
+
+    function addToList(e) {
+        e.preventDefault();
+        const newSet = ({ exercise: { "id": exerciseinput }, exercise_repetitions: parseInt(setinput.current.value) });
+        setExerciseSetList([...exerciseSetList, { exercise: exerciseinput, exercise_repetitions: parseInt(setinput.current.value) }]);
+        createNewSet(newSet);
+    }
+
+    async function createNewSet(newSet) {
+        try {
+            const id = await createSet(newSet);
+            setSetId([...setId, { 'id': id }]);
+        } catch (error) {
+            console.error(error.message);
+        }
+    }
+
+    console.log(sets) 
+    console.log(setId)
+    console.log(exerciseSetList)
+    console.log(form)
 
     return (
         <Modal {...props} size="lg" aria-labelledby="contained-modal-title-vcenter" centered>
@@ -102,15 +159,44 @@ function UpdateWorkout(props) {
                                 {errors.type}
                             </Form.Control.Feedback>
                         </Form.Group>
-                        {/* <Form.Group>
-                            <Form.Label>Sets</Form.Label>
-                            <Form.Control type="sets" placeholder="Sets" />
-                        </Form.Group>
+
                         <Form.Group>
-                            <Form.Label>Exercises included</Form.Label>
-                            <Form.Control type="sets" placeholder="Exercises included" />
-                        </Form.Group> */}
+                            <Form.Label>Selected exercises</Form.Label> <br></br>
+                            {exerciseSetList.map(set =>
+                                <p>Exercise id: {set.exercise} Repetitions: {set.exercise_repetitions}</p>
+                            )}
+                        </Form.Group>
+
                         <Button type="submit">Submit</Button>
+                    </Form>
+                    <Form onSubmit={addToList}>
+                        <Card>
+                            <Card.Body>
+                                <Form.Row>
+                                    <Form.Group as={Col}>
+                                        <Form.Label>Sets</Form.Label>
+                                        <Form.Control type="text"
+                                            placeholder="10"
+                                            required
+                                            ref={setinput} />
+                                    </Form.Group>
+                                    <Form.Group as={Col} >
+                                        <Form.Label>Exercises</Form.Label>
+                                        <Form.Control
+                                            onChange={(e) => setExerciseInput(exercises[e.target.value].id)}
+                                            as="select" className="mr-sm-2" custom required>
+                                            {exercises.map((exercise, index) =>
+                                                <option key={index} value={index}>
+                                                    {exercise.id}: {exercise.name}
+                                                </option>)}
+                                        </Form.Control>
+                                    </Form.Group>
+                                    <Form.Group as={Col}>
+                                        <Button style={{ margin: '2em 0' }} type="submit">Add ecersise</Button>
+                                    </Form.Group>
+                                </Form.Row>
+                            </Card.Body>
+                        </Card>
                     </Form>
                 </Card.Body>
             </Modal.Body>

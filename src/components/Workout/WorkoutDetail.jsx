@@ -23,55 +23,46 @@ function WorkoutDetails(props) {
             }
         }
 
+        fetchSetData().then(setsdata => {
+            setSets(setsdata);
+        }) 
+
+    }, []);
+
+    // get repetitions anf exercise id's
+    useEffect(() => {
+        const repetition = [];
+        const id = [];
+        sets.map(item => {
+            repetition.push(item.exercise_repetitions)
+            id.push(item.exercise)
+        })
+        setRepetitions(repetition);
+        setExerciseIds(id);  
+    }, [sets]);
+
+    //get ecersice by id
+    useEffect(() => {
         async function fetchExersiseData(exerciseId) {
             try {
                 const item = await getExerciseById(exerciseId);
-                return item;
+                setExercises(oldArray => [...oldArray, item]);
             } catch (error) {
                 console.error(error.message);
             }
         }
 
-        fetchSetData().then(setsdata => {
-            setSets(setsdata);
-
-            const repetition = [];
-            const id = [];
-            sets.map(item => {
-                repetition.push(item.exercise_repetitions)
-                id.push(item.exercise)
+        if (exercises.length == 0) {
+            exerciseIds.map(item => {
+                fetchExersiseData(item);
             })
-            setRepetitions(repetition);
-            setExerciseIds(id);
-
-            if (exercises.length == 0 && exercises.length <= repetitions.length) {
-
-                addExerciseToList();
-            }
-        })
-    }, [currentWorkout]);
-
-    // map exerrcise id`s and get data
-    function addExerciseToList() {
-        exerciseIds.map(item => {
-            fetchExersiseData(item);
-        })
-    }
-
-    // get exercise by id
-    async function fetchExersiseData(exerciseId) {
-        const item = await getExerciseById(exerciseId);
-        setExercises(oldArray => [...oldArray, item]);
-    }
-
-    // console.log(sets) //sets latautuu kun sivu latautuu
-    // console.log(exerciseIds) //ok
-    // console.log(repetitions)// ok
-    // console.log(exercises)
+        }
+    }, [repetitions, exerciseIds]);
 
     return (
         <Card.Body>
             <ul>
+                {exercises.length == 0 && <p>No exercises included to this workout</p>}
                 {exercises.map((exercise, i) =>
                     <div>
                         <p>Repetitions: {repetitions[i]}</p>

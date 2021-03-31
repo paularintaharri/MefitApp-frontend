@@ -89,6 +89,7 @@ function WorkoutPage() {
                             <Button type="submit" onClick={() => setModalWorkoutUpdate(true)}>Update Selected Workout
                                 </Button>
                             <UpdateWorkout show={modalWorkoutUpdate} onHide={() => setModalWorkoutUpdate(false)}
+                                exercises={exercises}
                                 selectedworkout={selectedworkout} />
                         </Col>
                     </Form.Row>

@@ -59,8 +59,6 @@ function UpdateExercise(props) {
         }
     };
 
-    console.log(form)
-
     return (
         <Modal {...props} size="lg" aria-labelledby="contained-modal-title-vcenter" centered>
             <Modal.Header>

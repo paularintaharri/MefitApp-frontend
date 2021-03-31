@@ -82,10 +82,7 @@ function CreateWorkout(props) {
             console.error(error.message);
         }
     }
-
-    console.log(exerciseinput)
-    console.log(setinput)
-
+    
     return (
         <Modal {...props} size="lg" aria-labelledby="contained-modal-title-vcenter" centered>
             <Modal.Header>
@@ -122,7 +119,7 @@ function CreateWorkout(props) {
                         <Form.Group>
                             <Form.Label>Selected exercises</Form.Label> <br></br>
                             {exerciseSetList.map(set =>
-                                <p>exercise id: {set.exercise} repetitions: {set.exercise_repetitions}</p>
+                                <p>Exercise id: {set.exercise} Repetitions: {set.exercise_repetitions}</p>
                             )}
                         </Form.Group>
                         <Button type="submit">Submit</Button>
