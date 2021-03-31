@@ -74,7 +74,7 @@ export const createExercises = async (form) => {
 export const updateExercises = async (form) => {
     return await axios.patch(apiUrl + "/" + form.id, form, config)
         .then((results) => {
-            if (results.status === 204) {
+            if (results.status === 200) {
                 console.log("Exercise has been succesfully updated")
             } else {
                 console.log("Something went wrong, try again");

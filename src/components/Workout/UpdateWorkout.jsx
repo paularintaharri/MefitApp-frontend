@@ -45,6 +45,7 @@ function UpdateWorkout(props) {
         delete form['profiles']
         delete form['programs']
         delete form['goals']
+        delete form['exerciseSets']
         e.preventDefault()
         const newErrors = findFormErrors()
         if (Object.keys(newErrors).length !== 0) {
@@ -72,7 +73,7 @@ function UpdateWorkout(props) {
                 <Card.Body>
                     <Form onSubmit={onSubmitClicked}>
                         <Form.Group as={Row}>
-                            <Form.Label column sm="2"> Id: </Form.Label>
+                            <Form.Label column sm="2">Id:</Form.Label>
                             <Col sm="10">
                                 <Form.Control
                                     plaintext

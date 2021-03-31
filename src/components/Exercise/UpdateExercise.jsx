@@ -42,6 +42,7 @@ function UpdateExercise(props) {
     }
 
     async function onSubmitClicked(e) {
+        delete form['exerciseSets']
         e.preventDefault()
         const newErrors = findFormErrors()
         if (Object.keys(newErrors).length !== 0) {
@@ -49,7 +50,6 @@ function UpdateExercise(props) {
         } else {
             try {
                 await updateExercises(form);
-                console.log(form)
                 alert('Submitted!')
             } catch (error) {
                 console.error(error.message);
@@ -58,6 +58,8 @@ function UpdateExercise(props) {
             props.onHide()
         }
     };
+
+    console.log(form)
 
     return (
         <Modal {...props} size="lg" aria-labelledby="contained-modal-title-vcenter" centered>
@@ -70,7 +72,7 @@ function UpdateExercise(props) {
                 <Card.Body>
                     <Form onSubmit={onSubmitClicked}>
                         <Form.Group as={Row}>
-                            <Form.Label column sm="2"> Id: </Form.Label>
+                            <Form.Label column sm="2">Id:</Form.Label>
                             <Col sm="10">
                                 <Form.Control
                                     plaintext
