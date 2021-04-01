@@ -1,14 +1,77 @@
 import { Card } from "react-bootstrap";
 import ExerciseCard from "../Exercise/ExerciseCard";
+import { useState, useEffect } from "react";
+import { getSetsForWorkout } from "../../utils/workoutAPI";
+import { getExerciseById } from "../../utils/exerciseAPI";
 
-function WorkoutDetails() {;
+function WorkoutDetails(props) {
+    const currentWorkout = props.workout;
+    const [sets, setSets] = useState([]);
+    const [isLoading, setIsLoading] = useState(true);
+    const [exerciseIds, setExerciseIds] = useState([]);
+    const [repetitions, setRepetitions] = useState([]);
+    const [exercises, setExercises] = useState([]);
+
+    // Get sets of the workout
+    useEffect(() => {
+        async function fetchSetData() {
+            try {
+                const item = await getSetsForWorkout(currentWorkout);
+                return item;
+            } catch (error) {
+                console.error(error.message);
+            }
+        }
+
+        fetchSetData().then(setsdata => {
+            setSets(setsdata);
+        }) 
+
+    }, []);
+
+    // get repetitions anf exercise id's
+    useEffect(() => {
+        const repetition = [];
+        const id = [];
+        sets.map(item => {
+            repetition.push(item.exercise_repetitions)
+            id.push(item.exercise)
+        })
+        setRepetitions(repetition);
+        setExerciseIds(id);  
+    }, [sets]);
+
+    //get ecersice by id
+    useEffect(() => {
+        async function fetchExersiseData(exerciseId) {
+            try {
+                const item = await getExerciseById(exerciseId);
+                setExercises(oldArray => [...oldArray, item]);
+            } catch (error) {
+                console.error(error.message);
+            }
+        }
+
+        if (exercises.length == 0) {
+            exerciseIds.map(item => {
+                fetchExersiseData(item);
+            })
+        }
+    }, [repetitions, exerciseIds]);
 
     return (
         <Card.Body>
-            {/* <ExerciseCard /> */}
-            <h4>Sets</h4>
-            <p>5</p>
+            <ul>
+                {exercises.length == 0 && <p>No exercises included to this workout</p>}
+                {exercises.map((exercise, i) =>
+                    <div>
+                        <p>Repetitions: {repetitions[i]}</p>
+                        <ExerciseCard exercise={exercise} />
+                    </div>
+                )}
+            </ul>
         </Card.Body>
+
     );
 };
 
