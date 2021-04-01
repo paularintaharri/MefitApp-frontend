@@ -1,13 +1,23 @@
 import { useEffect, useState, useRef } from 'react';
 import './GetGoals.css';
 import { getUserStorage } from '../../utils/userStorage';
+import { Button, Card, Row, Col, ButtonGroup, Accordion } from "react-bootstrap";
 
 function GetGoals() {
+
+    const goal = "Run like you just robbed a bank";
+    const endTime = "5 days, for hours";
+
 
 
 
     const { token, tokenParsed } = getUserStorage('ra_session')
-    const id = tokenParsed.sub;
+    let id;
+
+    if (tokenParsed) {
+        id = tokenParsed.sub;
+    }
+
     const url = `https://me-fit-app.herokuapp.com/api/v1/profiles/${id}/goals`;
     const [goals, setGoals] = useState({});
 
@@ -42,9 +52,32 @@ function GetGoals() {
 
     return (
 
-        <div>
-            <h3>{goals[0]}</h3>
-        </div>
+        <Accordion defaultActiveKey="0">
+            <Card>
+                <Accordion.Toggle as={Card.Header} eventKey="1">
+                    <Row>
+                        <Col>
+                            <p>Goal: {goal}</p>
+                            <p>Endtime: {endTime}</p>
+                        </Col>
+                        <Col>
+                            <p>Progress: </p>
+
+                        </Col>
+
+                        <Col>
+                            <ButtonGroup className="mb-2 mr-2" aria-label="Show details">
+                                <Button type="button" >Show details</Button>
+                            </ButtonGroup>
+                        </Col>
+                    </Row>
+                </Accordion.Toggle>
+
+            </Card>
+        </Accordion>
+
+
+
     )
 
 }

@@ -23,20 +23,26 @@ function UpdateExercise(props) {
     }
 
     const findFormErrors = () => {
-        const { id, name, description, target_muscle_group, vid_link } = form
+        const { name, target_muscle_group } = form
+        var regex = /^[A-Za-z0-9]+(?:[ _-][A-Za-z0-9]+)*$/;
         const newErrors = {}
         if (!name || name === '') {
             newErrors.name = 'cannot be blank!'
         } else if (name.length > 30) {
             newErrors.name = 'name is too long!'
+        } else if (!name.match(regex)) {
+            newErrors.name = 'field must not include spesial characters'
         }
         if (!target_muscle_group || target_muscle_group === '') {
             newErrors.target_muscle_group = 'add a target muscle group!'
+        } else if (!target_muscle_group.match(regex)) {
+            newErrors.target_muscle_group = 'field must not include spesial characters'
         }
         return newErrors
     }
 
     async function onSubmitClicked(e) {
+        delete form['exerciseSets']
         e.preventDefault()
         const newErrors = findFormErrors()
         if (Object.keys(newErrors).length !== 0) {
@@ -44,10 +50,11 @@ function UpdateExercise(props) {
         } else {
             try {
                 await updateExercises(form);
+                alert('Submitted!')
             } catch (error) {
                 console.error(error.message);
+                alert('Error!')
             }
-            alert('Submitted!')
             props.onHide()
         }
     };
@@ -63,13 +70,12 @@ function UpdateExercise(props) {
                 <Card.Body>
                     <Form onSubmit={onSubmitClicked}>
                         <Form.Group as={Row}>
-                            <Form.Label column sm="2"> Id: </Form.Label>
+                            <Form.Label column sm="2">Id:</Form.Label>
                             <Col sm="10">
                                 <Form.Control
                                     plaintext
                                     readOnly
-                                    defaultValue={exercise.id}
-                                    onChange={e => setField('id', e.target.value)} />
+                                    defaultValue={exercise.id}/>
                             </Col>
                         </Form.Group>
                         <Form.Group>
@@ -90,7 +96,11 @@ function UpdateExercise(props) {
                                 rows={3}
                                 type="text"
                                 defaultValue={exercise.description}
-                                onChange={e => setField('description', e.target.value)} />
+                                onChange={e => setField('description', e.target.value)}
+                                isInvalid={!!errors.description} />
+                            <Form.Control.Feedback type='invalid'>
+                                {errors.description}
+                            </Form.Control.Feedback>   
                         </Form.Group>
                         <Form.Group>
                             <Form.Label>Target muscle group</Form.Label>

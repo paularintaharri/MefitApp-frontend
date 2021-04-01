@@ -19,7 +19,7 @@ function App() {
           <ApplicationFrame />
           <main>
             <Switch>
-              <Route exact path="/" component={NotFound} />
+              <Route exact path="/" component={DashBoardPage} />
               <Route exact path="/dashboard" component={DashBoardPage} />
               <Route exact path="/profile" component={ProfilePage} />
               <Route exact path="/exercises" component={ExercisePage} />

@@ -3,130 +3,26 @@ import { Form, Button } from 'react-bootstrap';
 import { useForm } from "react-hook-form";
 import { useEffect } from 'react';
 import { setUserStorage, getUserStorage } from '../utils/userStorage';
+import { getProfileData, patchProfileData } from '../utils/profileAPI';
 import './ProfileForm.css';
 
 function ProfileForm() {
 
-    const url = 'https://me-fit-app.herokuapp.com/api/v1/profiles/';
-
-    const [preloadedProfileValues, setPreloadedProfileValues] = useState({});
-    const [buttonText, setButtonText] = useState("register");
-
-
-    //const [storageData, setStorageData] = useState({})
-
-    //setId(tokenParsed.sub);
-    //console.log("ASETETTU ID: " + tokenParsed.sub);
-
-
-
-
-    const [id, setId] = useState("");
+    const [preloadedProfileValues, setPreloadedProfileValues] = useState(null);
     const { token, tokenParsed } = getUserStorage('ra_session');
-    setId(tokenParsed.sub);
-
 
     useEffect(() => {
-
-        setPreloadedProfileValues(getProfileData())
+        getProfileData(token, tokenParsed).then(data => setPreloadedProfileValues(data))
 
     }, []);
 
-
-    async function getProfileData() {
-        try {
-            let response = await fetch(url + id, {
-                method: 'GET',
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
-                },
-            });
-
-            let responseJson = await response.json();
-            console.log("incoming profilevalues: " + JSON.stringify(responseJson));
-            return (responseJson);
-        } catch (error) {
-            console.log("error is: " + error);
-        }
-    }
-
-
-    const { register, handleSubmit } = useForm({
-        //defaultValues: valuesFromServer
+    const { handleSubmit, register } = useForm({
     });
 
     async function processData(params) {
-        // params.preventDefault()
-        console.log("lähettäää");
-        // if (id) {
-        postProfileData(params);
-        // postUserData(params);
-        // setButtonText("Update");
-        // }
 
-        // else {
-        //     patchProfileData(params);
-        //     //  patchUserData(params);
-        //     setButtonText("Update");
-        // }
-    }
-
-
-    async function postProfileData(params) {
-        console.log(params)
-        try {
-            let response = await fetch(url, {
-                method: 'POST',
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
-                },
-                body: JSON.stringify({
-                    "id": tokenParsed.sub,
-                    "weight": params.weight,
-                    "height": params.height,
-                    "medical_conditions": params.medical_conditions,
-                    "disabilities": params.disabilities,
-                    "image_link": params.image_link,
-                })
-            });
-            let responseJson = await response.json();
-            console.log("response JSON: " + responseJson);
-            return responseJson.result;
-        } catch (error) {
-            console.log("error is: " + error);
-        }
-    }
-
-    async function patchProfileData(params) {
-        try {
-            let response = await fetch(url + id, {
-                method: 'PATCH',
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
-                },
-                body: JSON.stringify({
-                    "id": id,
-                    "first_name": params.first_name,
-                    "last_name": params.last_name,
-                    "weight": params.weight,
-                    "height": params.height,
-                    "medical_conditions": params.medical_conditions,
-                    "disabilities": params.disabilities,
-                    "image_link": params.image_link
-                })
-            });
-            let responseJson = await response.json();
-            console.log(response);
-            return responseJson.result;
-        } catch (error) {
-            console.log("error is: " + error);
-        }
+        console.log("params: " + JSON.stringify(params));
+        patchProfileData(params, token, tokenParsed);
     }
 
     return (
@@ -137,9 +33,8 @@ function ProfileForm() {
                     <Form.Group controlId="formHeight">
                         <Form.Label>Height</Form.Label>
                         <Form.Control
-                            ref={register}
-                            defaultValue={preloadedProfileValues.height}
-                            type="text"
+                            defaultValue={preloadedProfileValues && preloadedProfileValues.height}
+                            type="number"
                             name="weight"
                         />
                     </Form.Group>
@@ -148,8 +43,8 @@ function ProfileForm() {
                         <Form.Label>Weight</Form.Label>
                         <Form.Control
                             ref={register}
-                            defaultValue={preloadedProfileValues.weight}
-                            type="text"
+                            defaultValue={preloadedProfileValues && preloadedProfileValues.weight}
+                            type="number"
                             name="height"
                         />
                     </Form.Group>
@@ -158,7 +53,7 @@ function ProfileForm() {
                         <Form.Label>MedicalConditions</Form.Label>
                         <Form.Control
                             ref={register}
-                            placeholder={preloadedProfileValues.medical_conditions}
+                            placeholder={preloadedProfileValues && preloadedProfileValues.medical_conditions}
                             type="text"
                             name="medical_conditions"
                         />
@@ -168,7 +63,7 @@ function ProfileForm() {
                         <Form.Label>Disabilities</Form.Label>
                         <Form.Control
                             ref={register}
-                            placeholder={preloadedProfileValues.disabilities}
+                            placeholder={preloadedProfileValues && preloadedProfileValues.disabilities}
                             type="text"
                             name="disabilities"
                         />
@@ -178,7 +73,7 @@ function ProfileForm() {
                         <Form.Label>Image</Form.Label>
                         <Form.Control
                             ref={register}
-                            placeholder={preloadedProfileValues.image_link}
+                            placeholder={preloadedProfileValues && preloadedProfileValues.image_link}
                             type="text"
                             name="image_link"
                         />
@@ -187,7 +82,7 @@ function ProfileForm() {
                     <Form.Group controlId="formBasicChecbox">
                         <Form.Check name="checkBox" type="checkbox" label="I want to be a contributor" value="false" defaultChecked={preloadedUserValues.is_contributor} />
                     </Form.Group> */}
-                    <Button variant="primary" size="lg" type="submit" >{buttonText}</Button>
+                    <Button variant="primary" size="lg" type="submit" >Update</Button>
                 </Form>
             </div>
         </div>

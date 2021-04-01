@@ -5,24 +5,43 @@ import './ApplicationFrame.css';
 import KeycloakConnection from './KeycloakConnection';
 import { getUserStorage } from '../utils/userStorage';
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 
 function ApplicationFrame() {
 
-    const { tokenParsed } = getUserStorage('ra_session')
-    const [user] = useState(tokenParsed.name);
+    const { token, tokenParsed } = getUserStorage('ra_session');
+    const [user, setUser] = useState("mikko");
+
+
+    useEffect(() => {
+
+        if (tokenParsed) {
+            setUser(tokenParsed.name);
+        }
+
+    }, []);
+
+
+
+
+
+
+
+    //const { tokenParsed } = getUserStorage('ra_session')
+    //const [user] = useState(tokenParsed.name);
+    //const [user] = useState("Mikko");
 
     return (
         <div >
             <Navbar bg="light" variant="light">
-                <Navbar.Brand href="#home">MeFit</Navbar.Brand>
+                <Navbar.Brand >MeFit</Navbar.Brand>
                 <Nav className="mr-auto">
 
 
 
                     <LinkContainer className='navBarLink' to="/profile">
-                        <Nav.Link eventKey="disabled" disabled>Logged in: {user}</Nav.Link>
+                        <Nav.Link eventKey="disabled" disabled >Logged in: {tokenParsed && user}</Nav.Link>
                     </LinkContainer>
 
                     <Nav variant="pills" defaultActiveKey="dashboard">
@@ -31,7 +50,7 @@ function ApplicationFrame() {
                         </LinkContainer>
 
                         <LinkContainer className='navBarLink' to="/goals">
-                            <Nav.Link>Goals</Nav.Link>
+                            <Nav.Link eventKey="disabled" disabled>Goals</Nav.Link>
                         </LinkContainer>
 
                         <LinkContainer className='navBarLink' to="/workouts">
@@ -43,14 +62,16 @@ function ApplicationFrame() {
                         </LinkContainer>
 
                         <LinkContainer className='navBarLink' to="/exercises">
-                            <Nav.Link>Exercises</Nav.Link>
+                            <Nav.Link >Exercises</Nav.Link>
+                        </LinkContainer>
+
+                        <LinkContainer className='navBarLink' to="/profile">
+                            <Nav.Link >Profile</Nav.Link>
                         </LinkContainer>
                     </Nav>
                 </Nav>
 
-                <LinkContainer to="/profile">
-                    <Nav.Link >Profile</Nav.Link>
-                </LinkContainer>
+
 
                 <Nav className="mr-auto">
                     <KeycloakConnection />

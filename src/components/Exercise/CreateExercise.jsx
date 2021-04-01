@@ -3,7 +3,6 @@ import { useState } from 'react'
 import { createExercises } from '../../utils/exerciseAPI'
 
 function CreateExercise(props) {
-
     const [errors, setErrors] = useState({})
     const [form, setForm] = useState({})
 
@@ -19,15 +18,20 @@ function CreateExercise(props) {
     }
 
     const findFormErrors = () => {
-        const { name, description, target_muscle_group, vid_link } = form
+        const { name, target_muscle_group } = form
+        var regex = /^[A-Za-z0-9]+(?:[ _-][A-Za-z0-9]+)*$/;
         const newErrors = {}
         if (!name || name === '') {
             newErrors.name = 'cannot be blank!'
         } else if (name.length > 30) {
             newErrors.name = 'name is too long!'
+        } else if (!name.match(regex)) {
+            newErrors.name = 'field must not include spesial characters'
         }
         if (!target_muscle_group || target_muscle_group === '') {
             newErrors.target_muscle_group = 'add a target muscle group!'
+        } else if (!target_muscle_group.match(regex)) {
+            newErrors.target_muscle_group = 'field must not include spesial characters'
         }
         return newErrors
     }
@@ -40,10 +44,11 @@ function CreateExercise(props) {
         } else {
             try {
                 await createExercises(form);
+                alert('Submitted!')
             } catch (error) {
                 console.error(error.message);
+                alert('Error!')
             }
-            alert('Submitted!')
             props.onHide()
         }
     };
@@ -76,7 +81,11 @@ function CreateExercise(props) {
                                 rows={3}
                                 type="text"
                                 placeholder="Description"
-                                onChange={e => setField('description', e.target.value)} />
+                                onChange={e => setField('description', e.target.value)}
+                                isInvalid={!!errors.description} />
+                            <Form.Control.Feedback type='invalid'>
+                                {errors.description}
+                            </Form.Control.Feedback>
                         </Form.Group>
                         <Form.Group>
                             <Form.Label>Target muscle group</Form.Label>
