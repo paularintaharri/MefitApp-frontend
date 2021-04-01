@@ -39,6 +39,8 @@ function ExercisePage() {
     }, [exercises])
 
     return (
+
+
         <Container className="bd-content ps-lg-4">
             {isLoading && <p>loading</p>}
             {exercises.length !== 0 && (
@@ -82,6 +84,7 @@ function ExercisePage() {
                 </div>
             }
         </Container>
+
     );
 };
 
