@@ -98,6 +98,7 @@ function UpdateWorkout(props) {
         }
     };
 
+    //create and add new set of workouts to the list
     function addToList(e) {
         e.preventDefault();
         const newSet = ({ exercise: { "id": exerciseinput }, exercise_repetitions: parseInt(setinput.current.value) });
@@ -105,6 +106,7 @@ function UpdateWorkout(props) {
         createNewSet(newSet);
     }
 
+    //create new workout API request NOT WORKOING
     async function createNewSet(newSet) {
         try {
             const id = await createSet(newSet);
@@ -114,10 +116,10 @@ function UpdateWorkout(props) {
         }
     }
 
-    console.log(sets) 
-    console.log(setId)
-    console.log(exerciseSetList)
-    console.log(form)
+    // console.log(sets) 
+    // console.log(setId)
+    // console.log(exerciseSetList)
+    // console.log(form)
 
     return (
         <Modal {...props} size="lg" aria-labelledby="contained-modal-title-vcenter" centered>
