@@ -2,6 +2,7 @@ import { Modal, Card, Button, Form, Col } from "react-bootstrap";
 import { useState, useRef, useEffect } from 'react'
 import { createWorkout } from '../../utils/workoutAPI'
 import { createSet } from '../../utils/setAPI'
+import { getUserStorage } from '../../utils/userStorage';
 
 function CreateWorkout(props) {
     const [exercises, setExercises] = useState(props.exercises)
@@ -11,6 +12,8 @@ function CreateWorkout(props) {
     const [setId, setSetId] = useState([]);
     const [exerciseinput, setExerciseInput] = useState(exercises[0].id);
     const setinput = useRef();
+    const { token } = getUserStorage('ra_session')
+    const setWorkouts = props.setWorkouts;
 
     useEffect(() => {
         setField('exerciseSets', setId)
@@ -56,7 +59,9 @@ function CreateWorkout(props) {
             setErrors(newErrors)
         } else {
             try {
-                await createWorkout(form);
+                const createdItem = await createWorkout(form, token);
+                setWorkouts((previousList => [
+                    ...previousList, createdItem]))
                 alert('Submitted!')
             } catch (error) {
                 console.error(error.message);
@@ -76,13 +81,13 @@ function CreateWorkout(props) {
 
     async function createNewSet(newSet) {
         try {
-            const id = await createSet(newSet);
+            const id = await createSet(newSet, token);
             setSetId([...setId, { 'id': id }]);
         } catch (error) {
             console.error(error.message);
         }
     }
-    
+
     return (
         <Modal {...props} size="lg" aria-labelledby="contained-modal-title-vcenter" centered>
             <Modal.Header>
@@ -117,7 +122,7 @@ function CreateWorkout(props) {
                         </Form.Group>
 
                         <Form.Group>
-                            <Form.Label>Selected exercises</Form.Label> <br></br>
+                            <Form.Label>Selected exercises:</Form.Label> <br></br>
                             {exerciseSetList.map(set =>
                                 <p>Exercise id: {set.exercise} Repetitions: {set.exercise_repetitions}</p>
                             )}
@@ -126,7 +131,7 @@ function CreateWorkout(props) {
                     </Form>
 
                     <Form onSubmit={addToList}>
-                        <Card>
+                        <Card className="set-card">
                             <Card.Body>
                                 <Form.Row>
                                     <Form.Group as={Col}>

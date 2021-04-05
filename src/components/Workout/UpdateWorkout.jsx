@@ -2,6 +2,7 @@ import { Modal, Card, Button, Form, Row, Col } from "react-bootstrap";
 import { useState, useRef, useEffect } from 'react'
 import { updateWorkout, getSetsForWorkout } from '../../utils/workoutAPI'
 import { createSet } from '../../utils/setAPI'
+import { getUserStorage } from '../../utils/userStorage';
 
 function UpdateWorkout(props) {
     const workout = props.selectedworkout;
@@ -13,6 +14,8 @@ function UpdateWorkout(props) {
     const [setId, setSetId] = useState([]);
     const [exerciseinput, setExerciseInput] = useState();
     const setinput = useRef();
+    const { token } = getUserStorage('ra_session')
+    const setWorkouts = props.setWorkout;
 
     //set current workout details to form
     useEffect(() => {
@@ -34,13 +37,13 @@ function UpdateWorkout(props) {
     useEffect(() => {
         async function fetchSetData() {
             try {
-                const item = await getSetsForWorkout(workout);
+                const item = await getSetsForWorkout(workout, token);
                 return item;
             } catch (error) {
                 console.error(error.message);
             }
         }
-        fetchSetData().then(setsdata => {           
+        fetchSetData().then(setsdata => {
             setSets(setsdata);
         })
     }, [workout]);
@@ -88,7 +91,9 @@ function UpdateWorkout(props) {
             setErrors(newErrors)
         } else {
             try {
-                await updateWorkout(form);
+                const createdItem = await updateWorkout(form, token);
+                setWorkouts((previousList => [
+                    ...previousList, createdItem]))
                 alert('Submitted!')
             } catch (error) {
                 console.error(error.message);
@@ -109,7 +114,7 @@ function UpdateWorkout(props) {
     //create new workout API request NOT WORKOING
     async function createNewSet(newSet) {
         try {
-            const id = await createSet(newSet);
+            const id = await createSet(newSet, token);
             setSetId([...setId, { 'id': id }]);
         } catch (error) {
             console.error(error.message);
@@ -163,7 +168,7 @@ function UpdateWorkout(props) {
                         </Form.Group>
 
                         <Form.Group>
-                            <Form.Label>Selected exercises</Form.Label> <br></br>
+                            <Form.Label>Selected exercises:</Form.Label> <br></br>
                             {exerciseSetList.map(set =>
                                 <p>Exercise id: {set.exercise} Repetitions: {set.exercise_repetitions}</p>
                             )}
@@ -172,7 +177,7 @@ function UpdateWorkout(props) {
                         <Button type="submit">Submit</Button>
                     </Form>
                     <Form onSubmit={addToList}>
-                        <Card>
+                        <Card className="set-card">
                             <Card.Body>
                                 <Form.Row>
                                     <Form.Group as={Col}>

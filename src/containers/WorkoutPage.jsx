@@ -6,49 +6,66 @@ import CreateWorkout from '../components/Workout/CreateWorkout';
 import UpdateWorkout from '../components/Workout/UpdateWorkout';
 import { getAllWorkouts } from '../utils/workoutAPI';
 import { getAllExercises } from "../utils/exerciseAPI";
+import { getUserStorage } from '../utils/userStorage';
 
 function WorkoutPage() {
     const [modalWorkoutCreate, setModalWorkoutCreate] = useState(false);
     const [modalWorkoutUpdate, setModalWorkoutUpdate] = useState(false);
     const [workouts, setWorkouts] = useState([]);
     const [exercises, setExercises] = useState([]);
-
     const [selectedworkout, setSelectedWorkout] = useState();
     const [isLoading, setIsLoading] = useState(true);
+    const { token, tokenParsed } = getUserStorage('ra_session')
+    const [isContributor, setIsContributor] = useState(false);
 
     useEffect(() => {
-        async function fetchWorkoutData() {
-            try {
-                const item = await getAllWorkouts();
-                return item;
-            } catch (error) {
-                console.error(error.message);
-            }
+        if (tokenParsed) {
+            const roles = tokenParsed.roles
+            roles.map(role => {
+                if (role === "Admin" || role === "Contributor") {
+                    setIsContributor(true);
+                }
+            })
         }
-        fetchWorkoutData().then(workouts => {
-            setWorkouts(workouts);
-            setIsLoading(false);
-        })
+    }, [tokenParsed, token])
 
-        async function fetchExerciseData() {
-            try {
-                const item = await getAllExercises();
-                return item;
-            } catch (error) {
-                console.error(error.message);
+    useEffect(() => {
+        if (token) {
+            async function fetchWorkoutData() {
+                try {
+                    const item = await getAllWorkouts(token);
+                    return item;
+                } catch (error) {
+                    console.error(error.message);
+                }
             }
+            fetchWorkoutData().then(workouts => {
+                setWorkouts(workouts);
+                setIsLoading(false);
+            })
+
+            async function fetchExerciseData() {
+                try {
+                    const item = await getAllExercises(token);
+                    return item;
+                } catch (error) {
+                    console.error(error.message);
+                }
+            }
+            fetchExerciseData().then(exercises => {
+                setExercises(exercises);
+                setIsLoading(false);
+            })
         }
-        fetchExerciseData().then(exercises => {
-            setExercises(exercises);
-            setIsLoading(false);
-        })
-    }, []);
+    }, [token]);
 
     useEffect(() => {
         if (workouts) {
             setSelectedWorkout(workouts[0])
         }
     }, [workouts])
+
+    console.log(workouts)
 
     return (
         <Container className="bd-content ps-lg-4">
@@ -57,22 +74,25 @@ function WorkoutPage() {
                 <div>
                     <h1>Workouts</h1>
                     <WorkoutList workouts={workouts} />
-                    <ButtonGroup className="mb-2 mr-2" aria-label="Update Workout">
-                        <Button
-                            type="button"
-                            className="btn btn-primary"
-                            variant="primary"
-                            onClick={() => setModalWorkoutCreate(true)}>
-                            Create New Workout
-                    </Button>
-                        <CreateWorkout
-                            show={modalWorkoutCreate}
-                            exercises={exercises}
-                            onHide={() => setModalWorkoutCreate(false)} />
-                    </ButtonGroup>
+                    {isContributor &&
+                        <ButtonGroup className="mb-2 mr-2" aria-label="Update Workout">
+                            <Button
+                                type="button"
+                                className="btn btn-primary"
+                                variant="primary"
+                                onClick={() => setModalWorkoutCreate(true)}>
+                                Create New Workout
+                            </Button>
+                            <CreateWorkout
+                                show={modalWorkoutCreate}
+                                exercises={exercises}
+                                onHide={() => setModalWorkoutCreate(false)} 
+                                setWorkouts={setWorkouts}/>
+                        </ButtonGroup>
+                    }
                 </div>
             )}
-            { selectedworkout != null &&
+            { (selectedworkout != null && isContributor) && (
                 <div className="nav justify-content-center">
                     <Form.Row className="align-items-center">
                         <Col xs="auto" className="my-1">
@@ -90,11 +110,12 @@ function WorkoutPage() {
                                 </Button>
                             <UpdateWorkout show={modalWorkoutUpdate} onHide={() => setModalWorkoutUpdate(false)}
                                 exercises={exercises}
-                                selectedworkout={selectedworkout} />
+                                selectedworkout={selectedworkout} 
+                                setWorkouts={setWorkouts}/>
                         </Col>
                     </Form.Row>
                 </div>
-            }
+            )}
         </Container>
     );
 };
