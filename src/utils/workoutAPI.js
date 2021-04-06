@@ -10,7 +10,7 @@ let config = {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${token}`
     }
-  }
+}
 
 export const getAllWorkouts = async () => {
     return await axios.get(apiUrl, config)
