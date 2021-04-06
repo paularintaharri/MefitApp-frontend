@@ -65,8 +65,6 @@ function WorkoutPage() {
         }
     }, [workouts])
 
-    console.log(workouts)
-
     return (
         <Container className="bd-content ps-lg-4">
             {isLoading && <p>loading</p>}
