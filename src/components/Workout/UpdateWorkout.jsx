@@ -29,11 +29,14 @@ function UpdateWorkout(props) {
     }, [setId]);
 
     useEffect(() => {
-        setExerciseSetList([])
+        const newSetIdList = [];
+        const newExerciseSetList = [];
         sets.map(set => {
-            setExerciseSetList([...exerciseSetList, { exercise: set.exercise.slice(18), exercise_repetitions: set.exercise_repetitions }]);
+            newSetIdList.push({ 'id': set.id });
+            newExerciseSetList.push( { exercise: set.exercise.slice(18), exercise_repetitions: set.exercise_repetitions });
         })
-    
+        setSetId(newSetIdList);
+        setExerciseSetList(newExerciseSetList);
     }, [sets]);
 
     //get sets of the workout

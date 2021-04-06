@@ -44,7 +44,11 @@ function WorkoutPage() {
                 setWorkouts(workouts);
                 setIsLoading(false);
             })
+        }
+    }, [token]);
 
+    useEffect(() => {
+        if (token) {
             async function fetchExerciseData() {
                 try {
                     const item = await getAllExercises(token);
