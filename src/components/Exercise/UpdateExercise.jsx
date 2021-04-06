@@ -1,11 +1,14 @@
 import { Modal, Card, Button, Form, Row, Col } from "react-bootstrap";
 import { useState, useEffect } from 'react'
 import { updateExercises } from '../../utils/exerciseAPI'
+import {getUserStorage} from '../../utils/userStorage';
 
 function UpdateExercise(props) {
     const exercise = props.selectedexercise;
     const [errors, setErrors] = useState({})
     const [form, setForm] = useState({})
+    const {token} = getUserStorage('ra_session')
+    const setExercises = props.setExercises;
 
     useEffect(() => {
         setForm(exercise);
@@ -49,7 +52,9 @@ function UpdateExercise(props) {
             setErrors(newErrors)
         } else {
             try {
-                await updateExercises(form);
+                const createdItem = await updateExercises(form, token);
+                setExercises((previousList => [
+                    ...previousList, createdItem]))
                 alert('Submitted!')
             } catch (error) {
                 console.error(error.message);

@@ -1,23 +1,15 @@
 import axios from 'axios'
-import {
-    getUserStorage
-} from '../utils/userStorage';
 
 const apiUrl = 'https://me-fit-app.herokuapp.com/api/v1/sets';
-const {
-    token
-} = getUserStorage('ra_session')
 
-let config = {
-    headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`
-    }
-}
-
-export const createSet = async (form) => {
-    return await axios.post(apiUrl, form, config)
+export const createSet = async (form, token) => {
+    return await axios.post(apiUrl, form, {
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            }
+        })
         .then((results) => {
             if (results.status === 201) {
                 console.log("Set has been succesfully created")

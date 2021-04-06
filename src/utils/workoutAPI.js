@@ -1,19 +1,15 @@
 import axios from 'axios'
-import { getUserStorage } from '../utils/userStorage';
 
 const apiUrl = 'https://me-fit-app.herokuapp.com/api/v1/workouts';
-const { token } = getUserStorage('ra_session')
 
-let config = {
-    headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`
-    }
-  }
-
-export const getAllWorkouts = async () => {
-    return await axios.get(apiUrl, config)
+export const getAllWorkouts = async (token) => {
+    return await axios.get(apiUrl, {
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            }
+        })
         .then(response => response.data)
         .catch((error) => {
             if (error.response) {
@@ -28,14 +24,21 @@ export const getAllWorkouts = async () => {
         })
 }
 
-export const createWorkout = async (form) => {
-    return await axios.post(apiUrl, form, config)
+export const createWorkout = async (form, token) => {
+    return await axios.post(apiUrl, form, {
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            }
+        })
         .then((results) => {
             if (results.status === 201) {
                 console.log("Workout has been succesfully created")
             } else {
                 console.log("Something went wrong, try again");
             }
+            return results.data;
         })
         .catch((error) => {
             if (error.response) {
@@ -50,8 +53,14 @@ export const createWorkout = async (form) => {
         })
 }
 
-export const updateWorkout = async (form) => {
-    return await axios.patch(apiUrl + "/" + form.id, form, config)
+export const updateWorkout = async (form, token) => {
+    return await axios.patch(apiUrl + "/" + form.id, form, {
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            }
+        })
         .then((results) => {
             if (results.status === 200) {
                 console.log("Workout has been succesfully updated")
@@ -72,8 +81,14 @@ export const updateWorkout = async (form) => {
         })
 }
 
-export const getSetsForWorkout = async (workout) => {
-    return await axios.get(apiUrl + "/" + workout.id + "/sets", config)
+export const getSetsForWorkout = async (workout, token) => {
+    return await axios.get(apiUrl + "/" + workout.id + "/sets", {
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            }
+        })
         .then(response => response.data)
         .catch((error) => {
             if (error.response) {

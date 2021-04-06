@@ -8,7 +8,7 @@ function ExerciseList(props) {
 
     useEffect(() => {
         geData()
-    }, []);
+    }, [props]);
 
     async function geData() {
         try {
@@ -35,7 +35,7 @@ function ExerciseList(props) {
         <div>
             <div className="nav justify-content-center">
                 <Form inline >
-                    <FormControl type="text" placeholder="Search" className="mr-sm-2" onChange={onTargetMuscleGroupChanged} />
+                    <FormControl type="text" placeholder="Search" className="mr-sm-2 search-bar" onChange={onTargetMuscleGroupChanged} />
                 </Form>
             </div>
             <ul>
