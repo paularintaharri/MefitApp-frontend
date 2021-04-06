@@ -1,10 +1,13 @@
 import { Modal, Card, Button, Form } from "react-bootstrap";
 import { useState } from 'react'
 import { createExercises } from '../../utils/exerciseAPI'
+import { getUserStorage } from '../../utils/userStorage';
 
 function CreateExercise(props) {
     const [errors, setErrors] = useState({})
     const [form, setForm] = useState({})
+    const { token } = getUserStorage('ra_session')
+    const setExercises = props.setExercises;
 
     const setField = (field, value) => {
         setForm({
@@ -43,7 +46,9 @@ function CreateExercise(props) {
             setErrors(newErrors)
         } else {
             try {
-                await createExercises(form);
+                const createdItem = await createExercises(form, token);
+                setExercises((previousList => [
+                    ...previousList, createdItem]))
                 alert('Submitted!')
             } catch (error) {
                 console.error(error.message);

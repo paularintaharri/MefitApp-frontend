@@ -2,6 +2,7 @@ import { Modal, Card, Button, Form, Row, Col } from "react-bootstrap";
 import { useState, useRef, useEffect } from 'react'
 import { updateWorkout, getSetsForWorkout } from '../../utils/workoutAPI'
 import { createSet } from '../../utils/setAPI'
+import { getUserStorage } from '../../utils/userStorage';
 
 function UpdateWorkout(props) {
     const workout = props.selectedworkout;
@@ -13,6 +14,10 @@ function UpdateWorkout(props) {
     const [setId, setSetId] = useState([]);
     const [exerciseinput, setExerciseInput] = useState();
     const setinput = useRef();
+    const { token } = getUserStorage('ra_session')
+    const setWorkouts = props.setWorkout;
+    const selectedIndex = props.selectedIndex;
+    const workouts = props.workouts;
 
     //set current workout details to form
     useEffect(() => {
@@ -24,23 +29,24 @@ function UpdateWorkout(props) {
     }, [setId]);
 
     useEffect(() => {
+        setExerciseSetList([])
         sets.map(set => {
-            setSetId([...setId, { 'id': set.id }]);
             setExerciseSetList([...exerciseSetList, { exercise: set.exercise.slice(18), exercise_repetitions: set.exercise_repetitions }]);
         })
+    
     }, [sets]);
 
     //get sets of the workout
     useEffect(() => {
         async function fetchSetData() {
             try {
-                const item = await getSetsForWorkout(workout);
+                const item = await getSetsForWorkout(workout, token);
                 return item;
             } catch (error) {
                 console.error(error.message);
             }
         }
-        fetchSetData().then(setsdata => {           
+        fetchSetData().then(setsdata => {
             setSets(setsdata);
         })
     }, [workout]);
@@ -82,18 +88,21 @@ function UpdateWorkout(props) {
         delete form['profiles']
         delete form['programs']
         delete form['goals']
+        delete form['is_complete']
         e.preventDefault()
         const newErrors = findFormErrors()
         if (Object.keys(newErrors).length !== 0) {
             setErrors(newErrors)
         } else {
             try {
-                await updateWorkout(form);
-                alert('Submitted!')
+                const createdItem = await updateWorkout(form, token);
+                let newArr = workouts;
+                newArr[selectedIndex] = createdItem;
+                setWorkouts(newArr);
             } catch (error) {
                 console.error(error.message);
-                alert('Error!')
             }
+            alert('Submitted!')
             props.onHide()
         }
     };
@@ -106,20 +115,15 @@ function UpdateWorkout(props) {
         createNewSet(newSet);
     }
 
-    //create new workout API request NOT WORKOING
+    //create new workout API request
     async function createNewSet(newSet) {
         try {
-            const id = await createSet(newSet);
+            const id = await createSet(newSet, token);
             setSetId([...setId, { 'id': id }]);
         } catch (error) {
             console.error(error.message);
         }
     }
-
-    // console.log(sets) 
-    // console.log(setId)
-    // console.log(exerciseSetList)
-    // console.log(form)
 
     return (
         <Modal {...props} size="lg" aria-labelledby="contained-modal-title-vcenter" centered>
@@ -163,7 +167,7 @@ function UpdateWorkout(props) {
                         </Form.Group>
 
                         <Form.Group>
-                            <Form.Label>Selected exercises</Form.Label> <br></br>
+                            <Form.Label>Selected exercises:</Form.Label> <br></br>
                             {exerciseSetList.map(set =>
                                 <p>Exercise id: {set.exercise} Repetitions: {set.exercise_repetitions}</p>
                             )}
@@ -172,7 +176,7 @@ function UpdateWorkout(props) {
                         <Button type="submit">Submit</Button>
                     </Form>
                     <Form onSubmit={addToList}>
-                        <Card>
+                        <Card className="set-card">
                             <Card.Body>
                                 <Form.Row>
                                     <Form.Group as={Col}>

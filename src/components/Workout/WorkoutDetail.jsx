@@ -3,20 +3,21 @@ import ExerciseCard from "../Exercise/ExerciseCard";
 import { useState, useEffect } from "react";
 import { getSetsForWorkout } from "../../utils/workoutAPI";
 import { getExerciseById } from "../../utils/exerciseAPI";
+import {getUserStorage} from '../../utils/userStorage';
 
 function WorkoutDetails(props) {
     const currentWorkout = props.workout;
     const [sets, setSets] = useState([]);
-    const [isLoading, setIsLoading] = useState(true);
     const [exerciseIds, setExerciseIds] = useState([]);
     const [repetitions, setRepetitions] = useState([]);
     const [exercises, setExercises] = useState([]);
+    const {token} = getUserStorage('ra_session')
 
     // Get sets of the workout
     useEffect(() => {
         async function fetchSetData() {
             try {
-                const item = await getSetsForWorkout(currentWorkout);
+                const item = await getSetsForWorkout(currentWorkout, token);
                 return item;
             } catch (error) {
                 console.error(error.message);
@@ -27,7 +28,7 @@ function WorkoutDetails(props) {
             setSets(setsdata);
         }) 
 
-    }, []);
+    }, [token, currentWorkout]);
 
     // get repetitions anf exercise id's
     useEffect(() => {
@@ -45,7 +46,7 @@ function WorkoutDetails(props) {
     useEffect(() => {
         async function fetchExersiseData(exerciseId) {
             try {
-                const item = await getExerciseById(exerciseId);
+                const item = await getExerciseById(exerciseId, token);
                 setExercises(oldArray => [...oldArray, item]);
             } catch (error) {
                 console.error(error.message);
@@ -65,7 +66,7 @@ function WorkoutDetails(props) {
                 {exercises.length == 0 && <p>No exercises included to this workout</p>}
                 {exercises.map((exercise, i) =>
                     <div>
-                        <p>Repetitions: {repetitions[i]}</p>
+                        <p className="repetitions-text">Repetitions: {repetitions[i]}</p>
                         <ExerciseCard exercise={exercise} />
                     </div>
                 )}

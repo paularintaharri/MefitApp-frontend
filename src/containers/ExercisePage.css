@@ -6,3 +6,7 @@ li {
     padding: 0.25rem !important;
     background-color: rgba(229, 238, 224, 0.719);
 }
+
+.search-bar {
+    margin: 1em;
+}
