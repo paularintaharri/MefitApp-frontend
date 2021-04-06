@@ -125,11 +125,6 @@ function UpdateWorkout(props) {
         }
     }
 
-    // console.log(form)
-    // console.log(sets)
-    // console.log(setId)
-    // console.log(exerciseSetList)
-
     return (
         <Modal {...props} size="lg" aria-labelledby="contained-modal-title-vcenter" centered>
             <Modal.Header>
