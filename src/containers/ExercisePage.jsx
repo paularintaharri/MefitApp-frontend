@@ -12,6 +12,7 @@ function ExercisePage() {
     const [modalExerciseUpdate, setModalExerciseUpdate] = useState(false);
     const [exercises, setExercises] = useState([]);
     const [selectedexercise, setSelectedExercise] = useState();
+    const [selectedIndex, setSelectedIndex] = useState();
     const [isLoading, setIsLoading] = useState(true);
     const { token, tokenParsed } = getUserStorage('ra_session')
     const [isContributor, setIsContributor] = useState(false);
@@ -29,6 +30,7 @@ function ExercisePage() {
 
     function handleChange(newValue) {
         setSelectedExercise(exercises[newValue])
+        setSelectedIndex(newValue)
     }
 
     useEffect(() => {
@@ -96,6 +98,8 @@ function ExercisePage() {
                                 </Button>
                             <UpdateExercise show={modalExerciseUpdate} onHide={() => setModalExerciseUpdate(false)}
                                 selectedexercise={selectedexercise}
+                                exercises={exercises}
+                                selectedIndex={selectedIndex}
                                 setExercises={setExercises}/>
                         </Col>
                     </Form.Row>

@@ -16,6 +16,8 @@ function UpdateWorkout(props) {
     const setinput = useRef();
     const { token } = getUserStorage('ra_session')
     const setWorkouts = props.setWorkout;
+    const selectedIndex = props.selectedIndex;
+    const workouts = props.workouts;
 
     //set current workout details to form
     useEffect(() => {
@@ -27,10 +29,11 @@ function UpdateWorkout(props) {
     }, [setId]);
 
     useEffect(() => {
+        setExerciseSetList([])
         sets.map(set => {
-            setSetId([...setId, { 'id': set.id }]);
             setExerciseSetList([...exerciseSetList, { exercise: set.exercise.slice(18), exercise_repetitions: set.exercise_repetitions }]);
         })
+    
     }, [sets]);
 
     //get sets of the workout
@@ -85,6 +88,7 @@ function UpdateWorkout(props) {
         delete form['profiles']
         delete form['programs']
         delete form['goals']
+        delete form['is_complete']
         e.preventDefault()
         const newErrors = findFormErrors()
         if (Object.keys(newErrors).length !== 0) {
@@ -92,13 +96,13 @@ function UpdateWorkout(props) {
         } else {
             try {
                 const createdItem = await updateWorkout(form, token);
-                setWorkouts((previousList => [
-                    ...previousList, createdItem]))
-                alert('Submitted!')
+                let newArr = workouts;
+                newArr[selectedIndex] = createdItem;
+                setWorkouts(newArr);
             } catch (error) {
                 console.error(error.message);
-                alert('Error!')
             }
+            alert('Submitted!')
             props.onHide()
         }
     };
@@ -111,7 +115,7 @@ function UpdateWorkout(props) {
         createNewSet(newSet);
     }
 
-    //create new workout API request NOT WORKOING
+    //create new workout API request
     async function createNewSet(newSet) {
         try {
             const id = await createSet(newSet, token);
@@ -121,10 +125,10 @@ function UpdateWorkout(props) {
         }
     }
 
-    // console.log(sets) 
+    // console.log(form)
+    // console.log(sets)
     // console.log(setId)
     // console.log(exerciseSetList)
-    // console.log(form)
 
     return (
         <Modal {...props} size="lg" aria-labelledby="contained-modal-title-vcenter" centered>

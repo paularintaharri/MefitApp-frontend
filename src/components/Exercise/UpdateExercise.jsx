@@ -9,6 +9,8 @@ function UpdateExercise(props) {
     const [form, setForm] = useState({})
     const {token} = getUserStorage('ra_session')
     const setExercises = props.setExercises;
+    const selectedIndex = props.selectedIndex;
+    const exercises = props.exercises;
 
     useEffect(() => {
         setForm(exercise);
@@ -53,8 +55,9 @@ function UpdateExercise(props) {
         } else {
             try {
                 const createdItem = await updateExercises(form, token);
-                setExercises((previousList => [
-                    ...previousList, createdItem]))
+                let newArr = exercises;
+                newArr[selectedIndex] = createdItem; 
+                setExercises(newArr); 
                 alert('Submitted!')
             } catch (error) {
                 console.error(error.message);

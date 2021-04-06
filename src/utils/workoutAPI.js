@@ -33,7 +33,7 @@ export const createWorkout = async (form, token) => {
             }
         })
         .then((results) => {
-            if (results.status === 201) {
+            if (results.status === 200) {
                 console.log("Workout has been succesfully created")
             } else {
                 console.log("Something went wrong, try again");
@@ -67,6 +67,7 @@ export const updateWorkout = async (form, token) => {
             } else {
                 console.log("Something went wrong, try again");
             }
+            return results.data;
         })
         .catch((error) => {
             if (error.response) {

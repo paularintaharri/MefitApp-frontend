@@ -57,10 +57,6 @@ function ApplicationFrame() {
                             <Nav.Link>Workouts</Nav.Link>
                         </LinkContainer>
 
-                        <LinkContainer className='navBarLink' to="/programs">
-                            <Nav.Link>Programs</Nav.Link>
-                        </LinkContainer>
-
                         <LinkContainer className='navBarLink' to="/exercises">
                             <Nav.Link >Exercises</Nav.Link>
                         </LinkContainer>
