@@ -3,26 +3,51 @@ import { Form, Button } from 'react-bootstrap';
 import { useForm } from "react-hook-form";
 import { useEffect } from 'react';
 import { setUserStorage, getUserStorage } from '../utils/userStorage';
-import { getProfileData, patchProfileData } from '../utils/profileAPI';
+import { getProfileData, postProfileData, patchProfileData } from '../utils/profileAPI';
 import './ProfileForm.css';
 
 function ProfileForm() {
 
     const [preloadedProfileValues, setPreloadedProfileValues] = useState(null);
     const { token, tokenParsed } = getUserStorage('ra_session');
+    const [buttonText, setButtonText] = useState("register");
+    let [isNotEmpty, setIsNotEmpty] = useState(0);
+
+
 
     useEffect(() => {
-        getProfileData(token, tokenParsed).then(data => setPreloadedProfileValues(data))
-
+        getProfileData(token, tokenParsed).then(data => {
+            if (data !== undefined) {
+                if (data.id != null) {
+                    setButtonText("Update");
+                    setPreloadedProfileValues(data);
+                    setIsNotEmpty(1);
+                }
+            }
+        })
     }, []);
+
+
+    /*
+    useEffect(() => {
+        getProfileData(token, tokenParsed).then(data => setPreloadedProfileValues(data))
+ 
+    }, []); 
+    */
 
     const { handleSubmit, register } = useForm({
     });
 
     async function processData(params) {
 
-        console.log("params: " + JSON.stringify(params));
-        patchProfileData(params, token, tokenParsed);
+        if (isNotEmpty === 0) {
+            postProfileData(params, token, tokenParsed);
+            setButtonText("postaa Dataa");
+        }
+        else if (isNotEmpty > 0) {
+            patchProfileData(params, token, tokenParsed);
+            console.log("Pätsää Dataa")
+        }
     }
 
     return (
@@ -33,9 +58,10 @@ function ProfileForm() {
                     <Form.Group controlId="formHeight">
                         <Form.Label>Height</Form.Label>
                         <Form.Control
+                            ref={register}
                             defaultValue={preloadedProfileValues && preloadedProfileValues.height}
                             type="number"
-                            name="weight"
+                            name="height"
                         />
                     </Form.Group>
                     <br />
@@ -45,7 +71,7 @@ function ProfileForm() {
                             ref={register}
                             defaultValue={preloadedProfileValues && preloadedProfileValues.weight}
                             type="number"
-                            name="height"
+                            name="weight"
                         />
                     </Form.Group>
                     <br />
@@ -53,7 +79,7 @@ function ProfileForm() {
                         <Form.Label>MedicalConditions</Form.Label>
                         <Form.Control
                             ref={register}
-                            placeholder={preloadedProfileValues && preloadedProfileValues.medical_conditions}
+                            defaultValue={preloadedProfileValues && preloadedProfileValues.medical_conditions}
                             type="text"
                             name="medical_conditions"
                         />
@@ -63,7 +89,7 @@ function ProfileForm() {
                         <Form.Label>Disabilities</Form.Label>
                         <Form.Control
                             ref={register}
-                            placeholder={preloadedProfileValues && preloadedProfileValues.disabilities}
+                            defaultValue={preloadedProfileValues && preloadedProfileValues.disabilities}
                             type="text"
                             name="disabilities"
                         />
@@ -73,7 +99,7 @@ function ProfileForm() {
                         <Form.Label>Image</Form.Label>
                         <Form.Control
                             ref={register}
-                            placeholder={preloadedProfileValues && preloadedProfileValues.image_link}
+                            defaultValue={preloadedProfileValues && preloadedProfileValues.image_link}
                             type="text"
                             name="image_link"
                         />
@@ -82,7 +108,7 @@ function ProfileForm() {
                     <Form.Group controlId="formBasicChecbox">
                         <Form.Check name="checkBox" type="checkbox" label="I want to be a contributor" value="false" defaultChecked={preloadedUserValues.is_contributor} />
                     </Form.Group> */}
-                    <Button variant="primary" size="lg" type="submit" >Update</Button>
+                    <Button variant="primary" size="lg" type="submit" >{buttonText}</Button>
                 </Form>
             </div>
         </div>
