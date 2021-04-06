@@ -28,7 +28,7 @@ function WorkoutDetails(props) {
             setSets(setsdata);
         }) 
 
-    }, [token]);
+    }, [token, currentWorkout]);
 
     // get repetitions anf exercise id's
     useEffect(() => {

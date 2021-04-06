@@ -14,6 +14,7 @@ function WorkoutPage() {
     const [workouts, setWorkouts] = useState([]);
     const [exercises, setExercises] = useState([]);
     const [selectedworkout, setSelectedWorkout] = useState();
+    const [selectedIndex, setSelectedIndex] = useState();
     const [isLoading, setIsLoading] = useState(true);
     const { token, tokenParsed } = getUserStorage('ra_session')
     const [isContributor, setIsContributor] = useState(false);
@@ -65,6 +66,11 @@ function WorkoutPage() {
         }
     }, [workouts])
 
+    function handleChange(newValue) {
+        setSelectedWorkout(workouts[newValue])
+        setSelectedIndex(newValue)
+    }
+
     return (
         <Container className="bd-content ps-lg-4">
             {isLoading && <p>loading</p>}
@@ -95,7 +101,7 @@ function WorkoutPage() {
                     <Form.Row className="align-items-center">
                         <Col xs="auto" className="my-1">
                             <Form.Control
-                                onChange={(e) => setSelectedWorkout(workouts[e.target.value])}
+                                onChange={(e) => handleChange(e.target.value)}
                                 as="select" className="mr-sm-2" custom>
                                 {workouts.map((workout, index) =>
                                     <option key={index} value={index}>
@@ -109,6 +115,8 @@ function WorkoutPage() {
                             <UpdateWorkout show={modalWorkoutUpdate} onHide={() => setModalWorkoutUpdate(false)}
                                 exercises={exercises}
                                 selectedworkout={selectedworkout} 
+                                workouts={workouts}
+                                selectedIndex={selectedIndex}
                                 setWorkouts={setWorkouts}/>
                         </Col>
                     </Form.Row>

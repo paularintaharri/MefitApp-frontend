@@ -5,7 +5,6 @@ import NotFound from './containers/NotFound';
 import ProfilePage from './containers/ProfilePage';
 import ExercisePage from './containers/ExercisePage';
 import WorkoutPage from './containers/WorkoutPage';
-import ProgramPage from './containers/ProgramPage';
 import DashBoardPage from './containers/DashBoardPage';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import KeycloakConnection from './components/KeycloakConnection';
@@ -24,7 +23,6 @@ function App() {
               <Route exact path="/profile" component={ProfilePage} />
               <Route exact path="/exercises" component={ExercisePage} />
               <Route exact path="/workouts" component={WorkoutPage} />
-              <Route exact path="/programs" component={ProgramPage} />
               <Route exact path="/*" component={NotFound} />
             </Switch>
           </main>

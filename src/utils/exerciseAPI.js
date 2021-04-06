@@ -91,6 +91,7 @@ export const updateExercises = async (form, token) => {
             } else {
                 console.log("Something went wrong, try again");
             }
+            return results.data;
         })
         .catch((error) => {
             if (error.response) {
