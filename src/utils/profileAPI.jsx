@@ -64,3 +64,34 @@ export async function patchProfileData(params, token, tokenParsed) {
         console.log("error is: " + error);
     }
 }
+
+export async function postProfileData(params, token, tokenParsed) {
+    const id = tokenParsed.sub;
+    console.log("postin sisällä params: " + JSON.stringify(params) + " id: " + id + " token: " + token)
+
+    try {
+        let response = await fetch(url, {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify({
+                "id": id,
+                //"first_name": params.first_name,
+                //"last_name": params.last_name,
+                "weight": parseInt(params.weight),
+                "height": parseInt(params.height),
+                "medical_conditions": params.medical_conditions,
+                "disabilities": params.disabilities,
+                "image_link": params.image_link
+            })
+        });
+        let responseJson = await response.json();
+        console.log(response);
+        return responseJson.result;
+    } catch (error) {
+        console.log("error is: " + error);
+    }
+}

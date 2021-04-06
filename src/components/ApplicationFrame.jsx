@@ -18,6 +18,7 @@ function ApplicationFrame() {
 
         if (tokenParsed) {
             setUser(tokenParsed.name);
+            console.log("Iidee: " + tokenParsed.sub);
         }
 
     }, []);
@@ -47,10 +48,6 @@ function ApplicationFrame() {
                     <Nav variant="pills" defaultActiveKey="dashboard">
                         <LinkContainer className='navBarLink' to="/dashboard">
                             <Nav.Link title="dashboard" eventKey="dashboard">Dashboard</Nav.Link>
-                        </LinkContainer>
-
-                        <LinkContainer className='navBarLink' to="/goals">
-                            <Nav.Link eventKey="disabled" disabled>Goals</Nav.Link>
                         </LinkContainer>
 
                         <LinkContainer className='navBarLink' to="/workouts">
