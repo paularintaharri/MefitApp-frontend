@@ -6,7 +6,7 @@ import { getUserStorage } from '../../utils/userStorage';
 
 function UpdateWorkout(props) {
     const workout = props.selectedworkout;
-    const [exercises, setExercises] = useState(props.exercises)
+    const [exercises] = useState(props.exercises)
     const [errors, setErrors] = useState({})
     const [form, setForm] = useState({})
     const [sets, setSets] = useState([]);
@@ -32,8 +32,12 @@ function UpdateWorkout(props) {
         const newSetIdList = [];
         const newExerciseSetList = [];
         sets.map(set => {
+            exercises.map(exe => {
+                if (exe.id == set.exercise.slice(18)){
+                    newExerciseSetList.push( { exercise: exe.name, exercise_repetitions: set.exercise_repetitions });
+                }
+            })
             newSetIdList.push({ 'id': set.id });
-            newExerciseSetList.push( { exercise: set.exercise.slice(18), exercise_repetitions: set.exercise_repetitions });
         })
         setSetId(newSetIdList);
         setExerciseSetList(newExerciseSetList);
@@ -113,8 +117,8 @@ function UpdateWorkout(props) {
     //create and add new set of workouts to the list
     function addToList(e) {
         e.preventDefault();
-        const newSet = ({ exercise: { "id": exerciseinput }, exercise_repetitions: parseInt(setinput.current.value) });
-        setExerciseSetList([...exerciseSetList, { exercise: exerciseinput, exercise_repetitions: parseInt(setinput.current.value) }]);
+        const newSet = ({ exercise: { "id": exerciseinput.id }, exercise_repetitions: parseInt(setinput.current.value) });
+        setExerciseSetList([...exerciseSetList, { exercise: exerciseinput.name, exercise_repetitions: parseInt(setinput.current.value) }]);
         createNewSet(newSet);
     }
 
@@ -172,7 +176,7 @@ function UpdateWorkout(props) {
                         <Form.Group>
                             <Form.Label>Selected exercises:</Form.Label> <br></br>
                             {exerciseSetList.map(set =>
-                                <p>Exercise id: {set.exercise} Repetitions: {set.exercise_repetitions}</p>
+                                <p>{set.exercise} (Repetitions: {set.exercise_repetitions})</p>
                             )}
                         </Form.Group>
 
@@ -192,10 +196,10 @@ function UpdateWorkout(props) {
                                     <Form.Group as={Col} >
                                         <Form.Label>Exercises</Form.Label>
                                         <Form.Control
-                                            onChange={(e) => setExerciseInput(exercises[e.target.value].id)}
+                                            onChange={(e) => setExerciseInput(exercises[e.target.value])}
                                             as="select" className="mr-sm-2" custom required>
                                             {exercises.map((exercise, index) =>
-                                                <option key={index} value={index}>
+                                                <option key={exercise.id} value={index}>
                                                     {exercise.id}: {exercise.name}
                                                 </option>)}
                                         </Form.Control>
