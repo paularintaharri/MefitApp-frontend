@@ -33,8 +33,8 @@ function UpdateWorkout(props) {
         const newExerciseSetList = [];
         sets.map(set => {
             exercises.map(exe => {
-                if (exe.id == set.exercise.slice(18)){
-                    newExerciseSetList.push( { exercise: exe.name, exercise_repetitions: set.exercise_repetitions });
+                if (exe.id == set.exercise.slice(18)) {
+                    newExerciseSetList.push({ exercise: exe.name, exercise_repetitions: set.exercise_repetitions });
                 }
             })
             newSetIdList.push({ 'id': set.id });
@@ -57,6 +57,13 @@ function UpdateWorkout(props) {
             setSets(setsdata);
         })
     }, [workout]);
+
+    //set default value for exercises dropdown
+    useEffect(() => {
+        if (exercises) {
+            setExerciseInput(exercises[0])
+        }
+    }, [exercises])
 
     //set form fields
     const setField = (field, value) => {
@@ -110,9 +117,16 @@ function UpdateWorkout(props) {
                 console.error(error.message);
             }
             alert('Submitted!')
-            props.onHide()
+           closeWindow();
         }
     };
+
+    //clear states and close window
+    function closeWindow(){
+        props.onHide()
+        setExerciseSetList([]);
+        setSetId([]);
+    }
 
     //create and add new set of workouts to the list
     function addToList(e) {
@@ -214,7 +228,7 @@ function UpdateWorkout(props) {
                 </Card.Body>
             </Modal.Body>
             <Modal.Footer>
-                <Button onClick={props.onHide}>Close</Button>
+                <Button onClick={closeWindow}>Close</Button>
             </Modal.Footer>
         </Modal>
     );
