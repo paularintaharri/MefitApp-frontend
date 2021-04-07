@@ -23,14 +23,12 @@ function WorkoutDetails(props) {
                 console.error(error.message);
             }
         }
-
         fetchSetData().then(setsdata => {
             setSets(setsdata);
         }) 
-
     }, [token, currentWorkout]);
 
-    // get repetitions anf exercise id's
+    // get repetitions and exercise id's
     useEffect(() => {
         const repetition = [];
         const id = [];
@@ -40,7 +38,7 @@ function WorkoutDetails(props) {
         })
         setRepetitions(repetition);
         setExerciseIds(id);  
-    }, [sets]);
+    }, [currentWorkout, sets]);
 
     //get ecersice by id
     useEffect(() => {
@@ -52,13 +50,14 @@ function WorkoutDetails(props) {
                 console.error(error.message);
             }
         }
-
         if (exercises.length == 0) {
             exerciseIds.map(item => {
                 fetchExersiseData(item);
             })
         }
-    }, [repetitions, exerciseIds]);
+    }, [repetitions, exerciseIds, sets]);
+
+    console.log(sets)
 
     return (
         <Card.Body>
@@ -72,7 +71,6 @@ function WorkoutDetails(props) {
                 )}
             </ul>
         </Card.Body>
-
     );
 };
 

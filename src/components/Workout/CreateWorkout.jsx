@@ -5,7 +5,7 @@ import { createSet } from '../../utils/setAPI'
 import { getUserStorage } from '../../utils/userStorage';
 
 function CreateWorkout(props) {
-    const [exercises, setExercises] = useState(props.exercises)
+    const [exercises] = useState(props.exercises)
     const [errors, setErrors] = useState({})
     const [form, setForm] = useState({})
     const [exerciseSetList, setExerciseSetList] = useState([]);
@@ -30,6 +30,13 @@ function CreateWorkout(props) {
             [field]: null
         })
     }
+
+    //set default value for exercises dropdown
+    useEffect(() => {
+        if (exercises) {
+            setExerciseInput(exercises[0])
+        }
+    }, [exercises])
 
     //find errors
     const findFormErrors = () => {
@@ -67,9 +74,16 @@ function CreateWorkout(props) {
                 console.error(error.message);
                 alert('Error!')
             }
-            props.onHide()
+            closeWindow();
         }
     };
+
+    //clear states and close window
+    function closeWindow(){
+        props.onHide()
+        setExerciseSetList([]);
+        setSetId([]);
+    }
 
     //create new set
     function addToList(e) {
@@ -162,7 +176,7 @@ function CreateWorkout(props) {
                 </Card.Body>
             </Modal.Body>
             <Modal.Footer>
-                <Button onClick={props.onHide}>Close</Button>
+            <Button onClick={closeWindow}>Close</Button>
             </Modal.Footer>
         </Modal>
     );
