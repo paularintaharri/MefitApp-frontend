@@ -11,6 +11,7 @@ function GetGoals() {
     const { token, tokenParsed } = getUserStorage('ra_session')
     const [goals, setGoals] = useState([]);
 
+
     useEffect(() => {
 
         if (tokenParsed) {
@@ -19,7 +20,7 @@ function GetGoals() {
                 console.log("goals added: " + JSON.stringify(data));
             })
         }
-    }, [tokenParsed]);
+    }, [token]);
 
     return (
         <div>
