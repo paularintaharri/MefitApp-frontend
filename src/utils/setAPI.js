@@ -4,12 +4,12 @@ const apiUrl = 'https://me-fit-app.herokuapp.com/api/v1/sets';
 
 export const createSet = async (form, token) => {
     return await axios.post(apiUrl, form, {
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
-            }
-        })
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+        }
+    })
         .then((results) => {
             if (results.status === 201) {
                 console.log("Set has been succesfully created")

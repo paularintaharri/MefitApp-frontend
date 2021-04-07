@@ -9,22 +9,18 @@ import Modal from 'react-modal';
 function GetGoals() {
 
     const { token, tokenParsed } = getUserStorage('ra_session')
-
     const [goals, setGoals] = useState([]);
-    let id;
 
-    if (tokenParsed) {
-        id = tokenParsed.sub;
-    }
 
     useEffect(() => {
-        if (id) {
+
+        if (tokenParsed) {
             getGoalData(token, tokenParsed).then(data => {
                 setGoals(data)
                 console.log("goals added: " + JSON.stringify(data));
             })
         }
-    }, []);
+    }, [token]);
 
     return (
         <div>
@@ -34,7 +30,7 @@ function GetGoals() {
                         <Accordion.Toggle as={Card.Header} eventKey="1">
                             <Row>
                                 <Col>
-                                    <p id="endTime">Goal end date: {data.end_date}</p>
+                                    <p id="endTime">Goal end date: {data && data.end_date}</p>
                                 </Col>
                                 <Col>
                                     <p id="progress">Progress: </p>
