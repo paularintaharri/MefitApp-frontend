@@ -65,7 +65,7 @@ function WorkoutDetails(props) {
             <ul>
                 {exercises.length == 0 && <p>No exercises included to this workout</p>}
                 {exercises.map((exercise, i) =>
-                    <div>
+                    <div key={i}>
                         <p className="repetitions-text">Repetitions: {repetitions[i]}</p>
                         <ExerciseCard exercise={exercise} />
                     </div>
