@@ -39,12 +39,9 @@ function UpdateWorkout(props) {
             })
             newSetIdList.push({ 'id': set.id });
         })
-
         setSetId(newSetIdList);
         setExerciseSetList(newExerciseSetList);
     }, [sets]);
-
-
 
     //get sets of the workout
     useEffect(() => {
