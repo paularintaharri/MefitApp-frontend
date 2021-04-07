@@ -62,7 +62,7 @@ function WorkoutPage() {
                 setIsLoading(false);
             })
         }
-    }, [token]);
+    }, [token, workouts]);
 
     useEffect(() => {
         if (workouts) {
@@ -116,7 +116,8 @@ function WorkoutPage() {
                         <Col xs="auto" className="my-1">
                             <Button type="submit" onClick={() => setModalWorkoutUpdate(true)}>Update Selected Workout
                                 </Button>
-                            <UpdateWorkout show={modalWorkoutUpdate} onHide={() => setModalWorkoutUpdate(false)}
+                            <UpdateWorkout show={modalWorkoutUpdate} 
+                                onHide={() => setModalWorkoutUpdate(false)}
                                 exercises={exercises}
                                 selectedworkout={selectedworkout} 
                                 workouts={workouts}
