@@ -71,7 +71,7 @@ function UpdateExercise(props) {
         <Modal {...props} size="lg" aria-labelledby="contained-modal-title-vcenter" centered>
             <Modal.Header>
                 <Modal.Title id="contained-modal-title-vcenter">
-                    <h3>Updaxte Exercises</h3>
+                    <h3>Update Exercises</h3>
                 </Modal.Title>
             </Modal.Header>
             <Modal.Body>

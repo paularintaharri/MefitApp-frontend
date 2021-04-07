@@ -99,7 +99,7 @@ function CreateWorkout(props) {
                 <Card.Body>
                     <Form onSubmit={onSubmitClicked}>
                         <Form.Group>
-                            <Form.Label>Workour Name</Form.Label>
+                            <Form.Label>Workout Name</Form.Label>
                             <Form.Control
                                 type="text"
                                 name="name"
@@ -153,7 +153,7 @@ function CreateWorkout(props) {
                                         </Form.Control>
                                     </Form.Group>
                                     <Form.Group as={Col}>
-                                        <Button style={{ margin: '2em 0' }} type="submit">Add ecersise</Button>
+                                        <Button style={{ margin: '2em 0' }} type="submit">Add exercise</Button>
                                     </Form.Group>
                                 </Form.Row>
                             </Card.Body>
