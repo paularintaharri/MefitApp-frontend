@@ -71,7 +71,7 @@ function UpdateExercise(props) {
         <Modal {...props} size="lg" aria-labelledby="contained-modal-title-vcenter" centered>
             <Modal.Header>
                 <Modal.Title id="contained-modal-title-vcenter">
-                    <h3>Updaxte Exercises</h3>
+                    <h3>Update Exercises</h3>
                 </Modal.Title>
             </Modal.Header>
             <Modal.Body>
@@ -111,7 +111,7 @@ function UpdateExercise(props) {
                             </Form.Control.Feedback>   
                         </Form.Group>
                         <Form.Group>
-                            <Form.Label>Target muscle group</Form.Label>
+                            <Form.Label>Target Muscle Group</Form.Label>
                             <Form.Control type="text"
                                 defaultValue={exercise.target_muscle_group}
                                 onChange={e => setField('target_muscle_group', e.target.value)}
@@ -121,7 +121,7 @@ function UpdateExercise(props) {
                             </Form.Control.Feedback>
                         </Form.Group>
                         <Form.Group>
-                            <Form.Label>Link to video</Form.Label>
+                            <Form.Label>Link to Video</Form.Label>
                             <Form.Control type="text"
                                 defaultValue={exercise.vid_link}
                                 onChange={e => setField('vid_link', e.target.value)} />

@@ -1,3 +1,9 @@
+import React, { useState } from "react";
+import { setUserStorage, getUserStorage } from './userStorage';
+import axios from 'axios'
+
+
+
 export async function getGoalData(token, tokenParsed) {
 
     let id = tokenParsed.sub;
@@ -43,4 +49,36 @@ export async function getWorkoutData(token, goal) {
             console.log("error is: " + error);
         }
     }
+}
+
+
+export const createGoal = async (form, token) => {
+    const apiUrl = 'https://me-fit-app.herokuapp.com/api/v1/goals';
+
+    return await axios.post(apiUrl, form, {
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+        }
+    })
+        .then((results) => {
+            if (results.status === 201) {
+                console.log("Goal has been succesfully created")
+            } else {
+                console.log("Something went wrong, try again");
+            }
+            return results.data;
+        })
+        .catch((error) => {
+            if (error.response) {
+                console.log(error.response.data);
+                console.log(error.response.status);
+                console.log(error.response.headers);
+            } else if (error.request) {
+                console.log(error.request);
+            } else {
+                console.log('Error', error.message);
+            }
+        })
 }

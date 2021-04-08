@@ -5,7 +5,7 @@ import { getGoalData, getWorkoutData } from '../../utils/goalsAPI';
 import { ShowWorkouts } from './ShowWorkouts';
 import './GetGoals.css';
 
-function GetGoals() {
+function GetGoals(props) {
 
     const { token, tokenParsed } = getUserStorage('ra_session')
     const [goals, setGoals] = useState([]);
@@ -23,13 +23,15 @@ function GetGoals() {
     }
 
     //get goal data
+    const addedGoals = props.addedGoals;
+
     useEffect(() => {
         if (tokenParsed) {
             getGoalData(token, tokenParsed).then(data => {
                 setGoals(data)
             })
         }
-    }, [token]);
+    }, [token, addedGoals]);
 
     return (
         <div>

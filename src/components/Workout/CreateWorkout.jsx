@@ -5,7 +5,7 @@ import { createSet } from '../../utils/setAPI'
 import { getUserStorage } from '../../utils/userStorage';
 
 function CreateWorkout(props) {
-    const [exercises, setExercises] = useState(props.exercises)
+    const [exercises] = useState(props.exercises)
     const [errors, setErrors] = useState({})
     const [form, setForm] = useState({})
     const [exerciseSetList, setExerciseSetList] = useState([]);
@@ -30,6 +30,13 @@ function CreateWorkout(props) {
             [field]: null
         })
     }
+
+    //set default value for exercises dropdown
+    useEffect(() => {
+        if (exercises) {
+            setExerciseInput(exercises[0])
+        }
+    }, [exercises])
 
     //find errors
     const findFormErrors = () => {
@@ -67,15 +74,22 @@ function CreateWorkout(props) {
                 console.error(error.message);
                 alert('Error!')
             }
-            props.onHide()
+            closeWindow();
         }
     };
+
+    //clear states and close window
+    function closeWindow(){
+        props.onHide()
+        setExerciseSetList([]);
+        setSetId([]);
+    }
 
     //create new set
     function addToList(e) {
         e.preventDefault();
-        const newSet = ({ exercise: { "id": exerciseinput }, exercise_repetitions: parseInt(setinput.current.value) });
-        setExerciseSetList([...exerciseSetList, { exercise: exerciseinput, exercise_repetitions: parseInt(setinput.current.value) }]);
+        const newSet = ({ exercise: { "id": exerciseinput.id }, exercise_repetitions: parseInt(setinput.current.value) });
+        setExerciseSetList([...exerciseSetList, { exercise: exerciseinput.name, exercise_repetitions: parseInt(setinput.current.value) }]);
         createNewSet(newSet);
     }
 
@@ -99,11 +113,11 @@ function CreateWorkout(props) {
                 <Card.Body>
                     <Form onSubmit={onSubmitClicked}>
                         <Form.Group>
-                            <Form.Label>Workour Name</Form.Label>
+                            <Form.Label>Workout Name</Form.Label>
                             <Form.Control
                                 type="text"
                                 name="name"
-                                placeholder="Workout Name"
+                                placeholder="Name"
                                 onChange={e => setField('name', e.target.value)}
                                 isInvalid={!!errors.name} />
                             <Form.Control.Feedback type='invalid'>
@@ -122,9 +136,9 @@ function CreateWorkout(props) {
                         </Form.Group>
 
                         <Form.Group>
-                            <Form.Label>Selected exercises:</Form.Label> <br></br>
+                            <Form.Label>Selected Exercises:</Form.Label> <br></br>
                             {exerciseSetList.map(set =>
-                                <p>Exercise id: {set.exercise} Repetitions: {set.exercise_repetitions}</p>
+                                <p>{set.exercise} (Repetitions: {set.exercise_repetitions})</p>
                             )}
                         </Form.Group>
                         <Button type="submit">Submit</Button>
@@ -144,7 +158,7 @@ function CreateWorkout(props) {
                                     <Form.Group as={Col} >
                                         <Form.Label>Exercises</Form.Label>
                                         <Form.Control
-                                            onChange={(e) => setExerciseInput(exercises[e.target.value].id)}
+                                            onChange={(e) => setExerciseInput(exercises[e.target.value])}
                                             as="select" className="mr-sm-2" custom required>
                                             {exercises.map((exercise, index) =>
                                                 <option key={index} value={index}>
@@ -153,7 +167,7 @@ function CreateWorkout(props) {
                                         </Form.Control>
                                     </Form.Group>
                                     <Form.Group as={Col}>
-                                        <Button style={{ margin: '2em 0' }} type="submit">Add ecersise</Button>
+                                        <Button style={{ margin: '2em 0' }} type="submit">Add Exercise</Button>
                                     </Form.Group>
                                 </Form.Row>
                             </Card.Body>
@@ -162,7 +176,7 @@ function CreateWorkout(props) {
                 </Card.Body>
             </Modal.Body>
             <Modal.Footer>
-                <Button onClick={props.onHide}>Close</Button>
+            <Button onClick={closeWindow}>Close</Button>
             </Modal.Footer>
         </Modal>
     );
