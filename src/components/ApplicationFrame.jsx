@@ -9,7 +9,7 @@ import './ApplicationFrame.css';
 function ApplicationFrame() {
 
     const { token, tokenParsed } = getUserStorage('ra_session');
-    const [user, setUser] = useState("mikko");
+    const [user, setUser] = useState("paula testi");
 
     useEffect(() => {
 

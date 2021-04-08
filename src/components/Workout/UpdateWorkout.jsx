@@ -6,7 +6,7 @@ import { getUserStorage } from '../../utils/userStorage';
 
 function UpdateWorkout(props) {
     const workout = props.selectedworkout;
-    const [exercises] = useState(props.exercises)
+    const [exercises, setExercises] = useState([])
     const [errors, setErrors] = useState({})
     const [form, setForm] = useState({})
     const [sets, setSets] = useState([]);
@@ -18,6 +18,10 @@ function UpdateWorkout(props) {
     const setWorkouts = props.setWorkout;
     const selectedIndex = props.selectedIndex;
     const workouts = props.workouts;
+
+    useEffect(() => {
+        setExercises(props.exercises)
+    }, [props.exercises]);
 
     //set current workout details to form
     useEffect(() => {
@@ -212,7 +216,7 @@ function UpdateWorkout(props) {
                                         <Form.Control
                                             onChange={(e) => setExerciseInput(exercises[e.target.value])}
                                             as="select" className="mr-sm-2" custom required>
-                                            {exercises.map((exercise, index) =>
+                                            {exercises.length !== 0 && exercises.map((exercise, index) =>
                                                 <option key={exercise.id} value={index}>
                                                     {exercise.id}: {exercise.name}
                                                 </option>)}

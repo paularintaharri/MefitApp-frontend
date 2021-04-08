@@ -5,7 +5,7 @@ import { createSet } from '../../utils/setAPI'
 import { getUserStorage } from '../../utils/userStorage';
 
 function CreateWorkout(props) {
-    const [exercises] = useState(props.exercises)
+    const [exercises, setExercises] = useState([])
     const [errors, setErrors] = useState({})
     const [form, setForm] = useState({})
     const [exerciseSetList, setExerciseSetList] = useState([]);
@@ -14,6 +14,10 @@ function CreateWorkout(props) {
     const setinput = useRef();
     const { token } = getUserStorage('ra_session')
     const setWorkouts = props.setWorkouts;
+
+    useEffect(() => {
+        setExercises(props.exercises)
+    }, [props.exercises]);
 
     useEffect(() => {
         setField('exerciseSets', setId)
@@ -160,7 +164,7 @@ function CreateWorkout(props) {
                                         <Form.Control
                                             onChange={(e) => setExerciseInput(exercises[e.target.value])}
                                             as="select" className="mr-sm-2" custom required>
-                                            {exercises.map((exercise, index) =>
+                                            {exercises.length !== 0 && exercises.map((exercise, index) =>
                                                 <option key={index} value={index}>
                                                     {exercise.id}: {exercise.name}
                                                 </option>)}
