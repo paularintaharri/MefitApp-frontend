@@ -6,11 +6,16 @@ import { getGoalData } from '../../utils/goalsAPI';
 import Modal from 'react-modal';
 
 
-function GetGoals() {
+function GetGoals(props) {
 
     const { token, tokenParsed } = getUserStorage('ra_session')
     const [goals, setGoals] = useState([]);
+    const addedGoals = props.addedGoals;
 
+    useEffect(() => {
+        console.log(goals)
+        setGoals([...goals, addedGoals])
+    }, [addedGoals]);
 
     useEffect(() => {
 

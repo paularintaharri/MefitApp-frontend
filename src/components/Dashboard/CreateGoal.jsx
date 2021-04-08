@@ -1,23 +1,52 @@
 import { Modal, Card, Button, Form, Col } from "react-bootstrap";
-import { useState, useRef, useEffect } from 'react'
-import { createWorkout } from '../../utils/workoutAPI'
-import { createSet } from '../../utils/setAPI'
+import { useState, useEffect } from 'react'
 import { getUserStorage } from '../../utils/userStorage';
+import { getAllWorkouts } from '../../utils/workoutAPI';
+import { createGoal } from '../../utils/goalsAPI';
 
-function CreateWorkout(props) {
-    const [exercises] = useState(props.exercises)
+function CreateGoal(props) {
+    const [workouts, setWorkouts] = useState([])
     const [errors, setErrors] = useState({})
     const [form, setForm] = useState({})
-    const [exerciseSetList, setExerciseSetList] = useState([]);
-    const [setId, setSetId] = useState([]);
-    const [exerciseinput, setExerciseInput] = useState(exercises[0].id);
-    const setinput = useRef();
-    const { token } = getUserStorage('ra_session')
-    const setWorkouts = props.setWorkouts;
+    const [workoutInput, setWorkoutInput] = useState([]);
+    const [workoutIds, setWorkoutIds] = useState([]);
+    const [workoutList, setWorkoutList] = useState([]);
+    const { token, tokenParsed } = getUserStorage('ra_session')
+    const setGoals = props.setAddedGoals;
 
-    // useEffect(() => {
-    //     setField('exerciseSets', setId)
-    // }, [setId]);
+    //set default value for workouts dropdown
+    useEffect(() => {
+        if (workouts) {
+            setWorkoutInput(workouts[0])
+        }
+    }, [workouts]);
+
+    //set selected workouts to the form
+    useEffect(() => {
+        setField('workouts', workoutIds)
+    }, [workoutIds]);
+
+    //set user id to the form
+    useEffect(() => {
+        setField('profile', { 'id': tokenParsed.sub })
+    }, []);
+
+    //get all workouts
+    useEffect(() => {
+        if (token) {
+            async function fetchWorkoutData() {
+                try {
+                    const item = await getAllWorkouts(token);
+                    return item;
+                } catch (error) {
+                    console.error(error.message);
+                }
+            }
+            fetchWorkoutData().then(workouts => {
+                setWorkouts(workouts);
+            })
+        }
+    }, [token]);
 
     //set form inputs to state
     const setField = (field, value) => {
@@ -31,114 +60,79 @@ function CreateWorkout(props) {
         })
     }
 
-    // //set default value for exercises dropdown
-    // useEffect(() => {
-    //     if (exercises) {
-    //         setExerciseInput(exercises[0])
-    //     }
-    // }, [exercises])
-
     //find errors
     const findFormErrors = () => {
-        const { name, type } = form
-        var regex = /^[A-Za-z0-9]+(?:[ _-][A-Za-z0-9]+)*$/;
         const newErrors = {}
-        if (!name || name === '') {
-            newErrors.name = 'cannot be blank!'
-        } else if (name.length > 30) {
-            newErrors.name = 'name is too long!'
-        } else if (!name.match(regex)) {
-            newErrors.name = 'field must not include spesial characters'
-        }
-        if (!type || type === '') {
-            newErrors.type = 'add a target muscle group!'
-        } else if (!type.match(regex)) {
-            newErrors.type = 'field must not include spesial characters'
-        }
+        if (workoutList.length === 0) {
+            newErrors.workoutselected = 'Select and add workout'
+        } 
         return newErrors
     }
 
     //crete new workout
     async function onSubmitClicked(e) {
-    //     e.preventDefault();
-    //     const newErrors = findFormErrors();
-    //     if (Object.keys(newErrors).length !== 0) {
-    //         setErrors(newErrors)
-    //     } else {
-    //         try {
-    //             const createdItem = await createWorkout(form, token);
-    //             setWorkouts((previousList => [
-    //                 ...previousList, createdItem]))
-    //             alert('Submitted!')
-    //         } catch (error) {
-    //             console.error(error.message);
-    //             alert('Error!')
-    //         }
-    //         closeWindow();
-    //     }
+        e.preventDefault();
+        const newErrors = findFormErrors();
+        if (Object.keys(newErrors).length !== 0) {
+            setErrors(newErrors)
+        } else {
+            try {
+                const createdItem = await createGoal(form, token);
+                setGoals((previousList => [
+                    ...previousList, createdItem]))
+                alert('Submitted!')
+            } catch (error) {
+                console.error(error.message);
+                alert('Error!')
+            }
+            closeWindow();
+        }
     };
 
     //clear states and close window
-    function closeWindow(){
+    function closeWindow() {
         props.onHide()
-        // setExerciseSetList([]);
-        // setSetId([]);
+        setWorkoutList([]);
+        setWorkoutIds([]);
     }
 
     //create new set
     function addToList(e) {
-    //     e.preventDefault();
-    //     const newSet = ({ exercise: { "id": exerciseinput.id }, exercise_repetitions: parseInt(setinput.current.value) });
-    //     setExerciseSetList([...exerciseSetList, { exercise: exerciseinput.name, exercise_repetitions: parseInt(setinput.current.value) }]);
-    //     createNewSet(newSet);
+        e.preventDefault();
+        setWorkoutList([...workoutList, workoutInput]);
+        setWorkoutIds([...workoutIds, { 'id': workoutInput.id }]);
+        setErrors([])
     }
 
-    // async function createNewSet(newSet) {
-    //     try {
-    //         const id = await createSet(newSet, token);
-    //         setSetId([...setId, { 'id': id }]);
-    //     } catch (error) {
-    //         console.error(error.message);
-    //     }
-    // }
+    function formatDate(e) {
+        let date = new Date(e.target.value);
+        let formatted = date.getDate() + "-" + ("0" + (date.getMonth() + 1)).slice(-2) + "-" + date.getFullYear();
+        setField('end_date', formatted);
+    }
 
     return (
         <Modal {...props} size="lg" aria-labelledby="contained-modal-title-vcenter" centered>
             <Modal.Header>
                 <Modal.Title id="contained-modal-title-vcenter">
-                    <h3>Create New Workout</h3>
+                    <h3>Add New Goal</h3>
                 </Modal.Title>
             </Modal.Header>
             <Modal.Body>
                 <Card.Body>
                     <Form onSubmit={onSubmitClicked}>
                         <Form.Group>
-                            <Form.Label>Workout Name</Form.Label>
+                            <Form.Label>Goal end date</Form.Label>
                             <Form.Control
-                                type="text"
-                                name="name"
-                                placeholder="Workout Name"
-                                onChange={e => setField('name', e.target.value)}
-                                isInvalid={!!errors.name} />
-                            <Form.Control.Feedback type='invalid'>
-                                {errors.name}
-                            </Form.Control.Feedback>
+                                type="date"
+                                name="date"
+                                required
+                                onChange={formatDate}
+                            />
                         </Form.Group>
                         <Form.Group>
-                            <Form.Label>Workout Type</Form.Label>
-                            <Form.Control type="text"
-                                placeholder="Type"
-                                onChange={e => setField('type', e.target.value)}
-                                isInvalid={!!errors.type} />
-                            <Form.Control.Feedback type='invalid'>
-                                {errors.type}
-                            </Form.Control.Feedback>
-                        </Form.Group>
-
-                        <Form.Group>
-                            <Form.Label>Selected exercises:</Form.Label> <br></br>
-                            {exerciseSetList.map(set =>
-                                <p>{set.exercise} (Repetitions: {set.exercise_repetitions})</p>
+                            <Form.Label>Selected workouts:</Form.Label> <br></br>
+                            {workoutList.map(workout =>
+                                <p>Name: {workout.name}</p>
                             )}
                         </Form.Group>
                         <Button type="submit">Submit</Button>
@@ -148,26 +142,23 @@ function CreateWorkout(props) {
                         <Card className="set-card">
                             <Card.Body>
                                 <Form.Row>
-                                    <Form.Group as={Col}>
-                                        <Form.Label>Sets</Form.Label>
-                                        <Form.Control type="text"
-                                            placeholder="10"
-                                            required
-                                            ref={setinput} />
-                                    </Form.Group>
                                     <Form.Group as={Col} >
-                                        <Form.Label>Exercises</Form.Label>
+                                        <Form.Label>Workouts</Form.Label>
                                         <Form.Control
-                                            onChange={(e) => setExerciseInput(exercises[e.target.value])}
-                                            as="select" className="mr-sm-2" custom required>
-                                            {exercises.map((exercise, index) =>
+                                            onChange={(e) => setWorkoutInput(workouts[e.target.value])}
+                                            as="select" className="mr-sm-2" custom
+                                            isInvalid={!!errors.workoutselected} >
+                                            {workouts.map((workout, index) =>
                                                 <option key={index} value={index}>
-                                                    {exercise.id}: {exercise.name}
+                                                    {workout.id}: {workout.name}
                                                 </option>)}
                                         </Form.Control>
+                                        <Form.Control.Feedback type='invalid'>
+                                            {errors.workoutselected}
+                                        </Form.Control.Feedback>
                                     </Form.Group>
                                     <Form.Group as={Col}>
-                                        <Button style={{ margin: '2em 0' }} type="submit">Add exercise</Button>
+                                        <Button style={{ margin: '2em 0' }} type="submit">Add workout</Button>
                                     </Form.Group>
                                 </Form.Row>
                             </Card.Body>
@@ -176,10 +167,10 @@ function CreateWorkout(props) {
                 </Card.Body>
             </Modal.Body>
             <Modal.Footer>
-            <Button onClick={closeWindow}>Close</Button>
+                <Button onClick={closeWindow}>Close</Button>
             </Modal.Footer>
-        </Modal>
+        </Modal >
     );
 };
 
-export default CreateWorkout;
+export default CreateGoal;
