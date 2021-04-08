@@ -10,7 +10,7 @@ function CreateWorkout(props) {
     const [form, setForm] = useState({})
     const [exerciseSetList, setExerciseSetList] = useState([]);
     const [setId, setSetId] = useState([]);
-    const [exerciseinput, setExerciseInput] = useState(exercises[0].id);
+    const [exerciseinput, setExerciseInput] = useState();
     const setinput = useRef();
     const { token } = getUserStorage('ra_session')
     const setWorkouts = props.setWorkouts;
