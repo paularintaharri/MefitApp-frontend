@@ -11,6 +11,7 @@ function GetGoals(props) {
     const [goals, setGoals] = useState([]);
     const [workout, setWorkout] = useState([]);
     const [showModal, setShowModal] = useState(false);
+    const addedGoals = props.addedGoals;
 
     //get workout data and show in modal
     const openModal = (goal, index) => {
@@ -23,8 +24,6 @@ function GetGoals(props) {
     }
 
     //get goal data
-    const addedGoals = props.addedGoals;
-
     useEffect(() => {
         if (tokenParsed) {
             getGoalData(token, tokenParsed).then(data => {
