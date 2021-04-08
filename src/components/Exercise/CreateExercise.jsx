@@ -93,9 +93,9 @@ function CreateExercise(props) {
                             </Form.Control.Feedback>
                         </Form.Group>
                         <Form.Group>
-                            <Form.Label>Target muscle group</Form.Label>
+                            <Form.Label>Target Muscle Group</Form.Label>
                             <Form.Control type="text"
-                                placeholder="Target muscel group"
+                                placeholder="Target Muscle Group"
                                 onChange={e => setField('target_muscle_group', e.target.value)}
                                 isInvalid={!!errors.target_muscle_group} />
                             <Form.Control.Feedback type='invalid'>
@@ -103,7 +103,7 @@ function CreateExercise(props) {
                             </Form.Control.Feedback>
                         </Form.Group>
                         <Form.Group>
-                            <Form.Label>Link to video</Form.Label>
+                            <Form.Label>Link to Video</Form.Label>
                             <Form.Control type="text"
                                 placeholder="Video link"
                                 onChange={e => setField('vid_link', e.target.value)} />
