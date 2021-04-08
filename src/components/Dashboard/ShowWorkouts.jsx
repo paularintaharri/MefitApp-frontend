@@ -11,10 +11,11 @@ export const ShowWorkouts = ({ showModal, setShowModal, workout }) => {
             <Modal.Header closeButton>
                 <Modal.Title>Goal workout name</Modal.Title>
             </Modal.Header>
-            <Modal.Body>{workout.length > 0 && <h5>{workout[0].name}</h5>}
-                <br />
-                    Exercise sets:
-                    </Modal.Body>
+            <Modal.Body>
+                {workout.length !== 0 && workout.map(singleworkout =>
+                    <h5>{singleworkout.name}</h5>
+                )}
+            </Modal.Body>
             <Modal.Footer>
                 <Button variant="primary" onClick={() => setShowModal(false)}>
                     Close
