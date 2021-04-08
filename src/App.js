@@ -10,6 +10,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import KeycloakConnection from './components/KeycloakConnection';
 import ApplicationFrame from './components/ApplicationFrame';
 
+
 function App() {
   return (
     <div>

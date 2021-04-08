@@ -13,19 +13,13 @@ function Clock() {
                 }).format(date));
         }, 1000);
         return () => clearInterval(interval);
-
     }, [date])
 
     return (
-
         <div>
             <h4>{time}</h4>
         </div>
-
-
-
     )
-
 }
 
 export default Clock

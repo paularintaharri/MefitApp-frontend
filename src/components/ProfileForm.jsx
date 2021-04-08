@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Form, Button } from 'react-bootstrap';
 import { useForm } from "react-hook-form";
 import { useEffect } from 'react';
-import { setUserStorage, getUserStorage } from '../utils/userStorage';
+import { getUserStorage } from '../utils/userStorage';
 import { getProfileData, postProfileData, patchProfileData } from '../utils/profileAPI';
 import './ProfileForm.css';
 
@@ -12,8 +12,6 @@ function ProfileForm() {
     const { token, tokenParsed } = getUserStorage('ra_session');
     const [buttonText, setButtonText] = useState("register");
     let [isNotEmpty, setIsNotEmpty] = useState(0);
-
-
 
     useEffect(() => {
         getProfileData(token, tokenParsed).then(data => {
@@ -27,14 +25,6 @@ function ProfileForm() {
         })
     }, []);
 
-
-    /*
-    useEffect(() => {
-        getProfileData(token, tokenParsed).then(data => setPreloadedProfileValues(data))
- 
-    }, []); 
-    */
-
     const { handleSubmit, register } = useForm({
     });
 
@@ -42,11 +32,10 @@ function ProfileForm() {
 
         if (isNotEmpty === 0) {
             postProfileData(params, token, tokenParsed);
-            setButtonText("postaa Dataa");
+            setButtonText("update");
         }
         else if (isNotEmpty > 0) {
             patchProfileData(params, token, tokenParsed);
-            console.log("Pätsää Dataa")
         }
     }
 
@@ -104,10 +93,6 @@ function ProfileForm() {
                             name="image_link"
                         />
                     </Form.Group>
-                    {/* <br />
-                    <Form.Group controlId="formBasicChecbox">
-                        <Form.Check name="checkBox" type="checkbox" label="I want to be a contributor" value="false" defaultChecked={preloadedUserValues.is_contributor} />
-                    </Form.Group> */}
                     <Button variant="primary" size="lg" type="submit" >{buttonText}</Button>
                 </Form>
             </div>
