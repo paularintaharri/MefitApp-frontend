@@ -13,7 +13,6 @@ function GetGoals(props) {
     const addedGoals = props.addedGoals;
 
     useEffect(() => {
-        console.log(goals)
         setGoals([...goals, addedGoals])
     }, [addedGoals]);
 

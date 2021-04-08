@@ -28,7 +28,9 @@ function CreateGoal(props) {
 
     //set user id to the form
     useEffect(() => {
-        setField('profile', { 'id': tokenParsed.sub })
+        if (tokenParsed) {
+            setField('profile', { 'id': tokenParsed.sub })
+        }
     }, []);
 
     //get all workouts
@@ -65,7 +67,7 @@ function CreateGoal(props) {
         const newErrors = {}
         if (workoutList.length === 0) {
             newErrors.workoutselected = 'Select and add workout'
-        } 
+        }
         return newErrors
     }
 
