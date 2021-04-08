@@ -13,10 +13,6 @@ function GetGoals(props) {
     const addedGoals = props.addedGoals;
 
     useEffect(() => {
-        setGoals([...goals, addedGoals])
-    }, [addedGoals]);
-
-    useEffect(() => {
 
         if (tokenParsed) {
             getGoalData(token, tokenParsed).then(data => {
@@ -24,7 +20,7 @@ function GetGoals(props) {
                 console.log("goals added: " + JSON.stringify(data));
             })
         }
-    }, [token]);
+    }, [token, addedGoals]);
 
     return (
         <div>
