@@ -1,46 +1,28 @@
 import { Nav, Navbar } from 'react-bootstrap';
 import { LinkContainer } from 'react-router-bootstrap';
-import 'bootstrap/dist/css/bootstrap.min.css';
-import './ApplicationFrame.css';
 import KeycloakConnection from './KeycloakConnection';
 import { getUserStorage } from '../utils/userStorage';
-
 import React, { useEffect, useState } from "react";
-
+import 'bootstrap/dist/css/bootstrap.min.css';
+import './ApplicationFrame.css';
 
 function ApplicationFrame() {
 
     const { token, tokenParsed } = getUserStorage('ra_session');
     const [user, setUser] = useState("mikko");
 
-
     useEffect(() => {
 
         if (tokenParsed) {
             setUser(tokenParsed.name);
-            console.log("Iidee: " + tokenParsed.sub);
         }
-
     }, []);
-
-
-
-
-
-
-
-    //const { tokenParsed } = getUserStorage('ra_session')
-    //const [user] = useState(tokenParsed.name);
-    //const [user] = useState("Mikko");
 
     return (
         <div >
             <Navbar bg="light" variant="light">
                 <Navbar.Brand >MeFit</Navbar.Brand>
                 <Nav className="mr-auto">
-
-
-
                     <LinkContainer className='navBarLink' to="/profile">
                         <Nav.Link eventKey="disabled" disabled >Logged in: {tokenParsed && user}</Nav.Link>
                     </LinkContainer>
@@ -63,9 +45,6 @@ function ApplicationFrame() {
                         </LinkContainer>
                     </Nav>
                 </Nav>
-
-
-
                 <Nav className="mr-auto">
                     <KeycloakConnection />
                 </Nav>
