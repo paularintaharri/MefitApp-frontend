@@ -117,7 +117,7 @@ function CreateWorkout(props) {
                             <Form.Control
                                 type="text"
                                 name="name"
-                                placeholder="Workout Name"
+                                placeholder="Name"
                                 onChange={e => setField('name', e.target.value)}
                                 isInvalid={!!errors.name} />
                             <Form.Control.Feedback type='invalid'>
@@ -136,7 +136,7 @@ function CreateWorkout(props) {
                         </Form.Group>
 
                         <Form.Group>
-                            <Form.Label>Selected exercises:</Form.Label> <br></br>
+                            <Form.Label>Selected Exercises:</Form.Label> <br></br>
                             {exerciseSetList.map(set =>
                                 <p>{set.exercise} (Repetitions: {set.exercise_repetitions})</p>
                             )}
@@ -167,7 +167,7 @@ function CreateWorkout(props) {
                                         </Form.Control>
                                     </Form.Group>
                                     <Form.Group as={Col}>
-                                        <Button style={{ margin: '2em 0' }} type="submit">Add exercise</Button>
+                                        <Button style={{ margin: '2em 0' }} type="submit">Add Exercise</Button>
                                     </Form.Group>
                                 </Form.Row>
                             </Card.Body>

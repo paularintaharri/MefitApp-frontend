@@ -57,8 +57,6 @@ function WorkoutDetails(props) {
         }
     }, [repetitions, exerciseIds, sets]);
 
-    console.log(sets)
-
     return (
         <Card.Body>
             <ul>
