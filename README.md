@@ -20,9 +20,9 @@ Link to the app: [MeFit-App](https://mefit-app.herokuapp.com/)
 
 ## Documentation
 
-User Manual
+[User Manual](https://github.com/paularintaharri/MefitApp-frontend/blob/master/documents/user_manual.pdf)
 
-API Documentation
+[API Documentation](https://documenter.getpostman.com/view/14576152/TzCTZkVH)
 
 ## Team Members
 
